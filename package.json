@@ -1,40 +1,40 @@
 {
-  "name": "p-progress",
-  "version": "0.1.0",
-  "description": "Create a promise that reports progress",
-  "license": "MIT",
-  "repository": "sindresorhus/p-progress",
-  "author": {
-    "name": "Sindre Sorhus",
-    "email": "sindresorhus@gmail.com",
-    "url": "sindresorhus.com"
-  },
-  "engines": {
-    "node": ">=6"
-  },
-  "scripts": {
-    "test": "xo && ava"
-  },
-  "files": [
-    "index.js"
-  ],
-  "keywords": [
-    "promise",
-    "progress",
-    "events",
-    "event",
-    "async",
-    "function",
-    "await",
-    "promises",
-    "bluebird"
-  ],
-  "devDependencies": {
-    "ava": "*",
-    "delay": "^2.0.0",
-    "xo": "*"
-  },
-  "dependencies": {
-    "p-map": "^1.1.1"
-  }
+	"name": "p-progress",
+	"version": "0.1.0",
+	"description": "Create a promise that reports progress",
+	"license": "MIT",
+	"repository": "sindresorhus/p-progress",
+	"author": {
+		"name": "Sindre Sorhus",
+		"email": "sindresorhus@gmail.com",
+		"url": "sindresorhus.com"
+	},
+	"engines": {
+		"node": ">=8"
+	},
+	"scripts": {
+		"test": "xo && ava"
+	},
+	"files": [
+		"index.js"
+	],
+	"keywords": [
+		"promise",
+		"progress",
+		"events",
+		"event",
+		"async",
+		"function",
+		"await",
+		"promises",
+		"bluebird"
+	],
+	"dependencies": {
+		"p-map": "^1.1.1"
+	},
+	"devDependencies": {
+		"ava": "*",
+		"delay": "^2.0.0",
+		"xo": "*"
+	}
 }
