@@ -3,6 +3,7 @@
 	"version": "0.1.1",
 	"description": "Create a promise that reports progress",
 	"license": "MIT",
+	"typings": "index.d.ts",
 	"repository": "sindresorhus/p-progress",
 	"author": {
 		"name": "Sindre Sorhus",
