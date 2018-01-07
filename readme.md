@@ -145,7 +145,7 @@ const allProgressPromise = PProgress.all([
 
 Type: `Array`
 
-Array of promises.
+Array of promises or promise returning functions, similar to [p-series](https://github.com/sindresorhus/p-series).
 
 #### options
 
