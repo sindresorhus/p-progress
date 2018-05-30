@@ -161,6 +161,7 @@ Number of concurrently pending promises.
 
 To run the promises in series, set it to `1`.
 
+> When `concurrency` is set, first argument must be an array of Promise returning functions
 
 ## Related
 
