@@ -23,7 +23,7 @@ class PProgress extends Promise {
 
 	static all(promises, options) {
 		if (typeof options === 'object' && typeof options.concurrency === 'number' && !(promises.every(p => typeof p === 'function'))) {
-			throw new TypeError('When `options.concurrency` is set, first argument must be an array of Promise returing functions');
+			throw new TypeError('When `options.concurrency` is set, first argument must be an array of Promise returning functions');
 		}
 
 		return PProgress.fn(progress => {
