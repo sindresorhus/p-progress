@@ -161,7 +161,7 @@ Number of concurrently pending promises.
 
 To run the promises in series, set it to `1`.
 
-When this option is set, the `promises` argument argument must be an array of promise-returning functions.
+When this option is set, the first argument must be an array of promise-returning functions.
 
 
 ## Related
