@@ -16,7 +16,7 @@ class PProgress extends Promise {
 		return (...args) => {
 			return new PProgress((resolve, reject, progress) => {
 				args.push(progress);
-				input(...args).then(resolve, reject);
+				input(...args).then(resolve, reject); // eslint-disable-line promise/prefer-await-to-then
 			});
 		};
 	}
@@ -65,7 +65,7 @@ class PProgress extends Promise {
 			}
 
 			// We run this in the next microtask tick so `super` is called before we use `this`
-			Promise.resolve().then(() => {
+			Promise.resolve().then(() => { // eslint-disable-line promise/prefer-await-to-then
 				if (progress === this._progress) {
 					return;
 				}
