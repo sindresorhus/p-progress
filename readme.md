@@ -145,7 +145,7 @@ const allProgressPromise = PProgress.all([
 
 Type: `Array`
 
-Array of promises or promise returning functions, similar to [p-all](https://github.com/sindresorhus/p-all).
+Array of promises or promise-returning functions, similar to [p-all](https://github.com/sindresorhus/p-all).
 
 #### options
 
@@ -161,7 +161,8 @@ Number of concurrently pending promises.
 
 To run the promises in series, set it to `1`.
 
-> When `concurrency` is set, first argument must be an array of Promise returning functions
+When this option is set, the `promises` argument argument must be an array of promise-returning functions.
+
 
 ## Related
 
