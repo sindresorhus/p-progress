@@ -68,7 +68,9 @@ class PProgress extends Promise {
 			Promise.resolve().then(() => {
 				if (progress === this._progress) {
 					return;
-				} else if (progress < this._progress) {
+				}
+
+				if (progress < this._progress) {
 					throw new Error('The progress percentage can\'t be lower than the last progress event');
 				}
 
