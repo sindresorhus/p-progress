@@ -16,12 +16,16 @@ class PProgress extends Promise {
 		return (...args) => {
 			return new PProgress((resolve, reject, progress) => {
 				args.push(progress);
-				input(...args).then(resolve, reject);
+				input(...args).then(resolve, reject); // eslint-disable-line promise/prefer-await-to-then
 			});
 		};
 	}
 
 	static all(promises, options) {
+		if (options && typeof options.concurrency === 'number' && !(promises.every(p => typeof p === 'function'))) {
+			throw new TypeError('When `options.concurrency` is set, the first argument must be an Array of Promise-returning functions');
+		}
+
 		return PProgress.fn(progress => {
 			const progressMap = new Map();
 			const iterator = promises[Symbol.iterator]();
@@ -31,7 +35,8 @@ class PProgress extends Promise {
 			};
 
 			const mapper = async () => {
-				const promise = iterator.next().value;
+				const next = iterator.next().value;
+				const promise = typeof next === 'function' ? next() : next;
 				progressMap.set(promise, 0);
 
 				if (promise instanceof PProgress) {
@@ -60,10 +65,12 @@ class PProgress extends Promise {
 			}
 
 			// We run this in the next microtask tick so `super` is called before we use `this`
-			Promise.resolve().then(() => {
+			Promise.resolve().then(() => { // eslint-disable-line promise/prefer-await-to-then
 				if (progress === this._progress) {
 					return;
-				} else if (progress < this._progress) {
+				}
+
+				if (progress < this._progress) {
 					throw new Error('The progress percentage can\'t be lower than the last progress event');
 				}
 

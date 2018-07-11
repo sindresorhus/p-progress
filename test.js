@@ -1,5 +1,7 @@
 import test from 'ava';
 import delay from 'delay';
+import timeSpan from 'time-span';
+import inRange from 'in-range';
 import PProgress from '.';
 
 const fixture = Symbol('fixture');
@@ -100,4 +102,46 @@ test('PProgress.all()', async t => {
 		undefined,
 		undefined
 	]);
+});
+
+test('PProgress.all() with concurrency = 1', async t => {
+	const fixtureFn = PProgress.fn(async (input, progress) => {
+		progress(0.16);
+		await delay(50);
+		progress(0.55);
+		await delay(50);
+		return input;
+	});
+
+	const fixtureFn2 = PProgress.fn(async (input, progress) => {
+		progress(0.41);
+		await delay(50);
+		progress(0.93);
+		await delay(50);
+		return input;
+	});
+
+	// Should throw when first argument is array of promises instead of promise-returning functions
+	t.throws(() => PProgress.all([fixtureFn(fixture), fixtureFn2(fixture)], {
+		concurrency: 1
+	}), TypeError);
+
+	const end = timeSpan();
+	const p = PProgress.all([
+		() => fixtureFn(fixture),
+		() => fixtureFn2(fixture)
+	], {
+		concurrency: 1
+	});
+
+	p.onProgress(progress => {
+		t.true(progress >= 0 && progress <= 1);
+	});
+
+	t.deepEqual(await p, [
+		fixture,
+		fixture
+	]);
+
+	t.true(inRange(end(), 200 /* 4 delays of 50ms each */, 250 /* reasonable padding */));
 });
