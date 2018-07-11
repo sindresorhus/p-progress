@@ -14,9 +14,13 @@ const sum = iterable => {
 class PProgress extends Promise {
 	static fn(input) {
 		return (...args) => {
-			return new PProgress((resolve, reject, progress) => {
+			return new PProgress(async (resolve, reject, progress) => {
 				args.push(progress);
-				input(...args).then(resolve, reject); // eslint-disable-line promise/prefer-await-to-then
+				try {
+					resolve(await input(...args));
+				} catch (error) {
+					reject(error);
+				}
 			});
 		};
 	}
@@ -64,8 +68,10 @@ class PProgress extends Promise {
 				throw new TypeError('The progress percentage should be a number between 0 and 1');
 			}
 
-			// We run this in the next microtask tick so `super` is called before we use `this`
-			Promise.resolve().then(() => { // eslint-disable-line promise/prefer-await-to-then
+			(async () => {
+				// We wait for the next microtask tick so `super` is called before we use `this`
+				await Promise.resolve();
+
 				if (progress === this._progress) {
 					return;
 				}
@@ -79,7 +85,7 @@ class PProgress extends Promise {
 				for (const listener of this._listeners) {
 					listener(progress);
 				}
-			});
+			})();
 		};
 
 		super((resolve, reject) => {
