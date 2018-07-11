@@ -121,7 +121,7 @@ test('PProgress.all() with concurrency = 1', async t => {
 		return input;
 	});
 
-	// Should throw when first argument is array of Promises instead of promise-returning functions
+	// Should throw when first argument is array of promises instead of promise-returning functions
 	t.throws(() => PProgress.all([fixtureFn(fixture), fixtureFn2(fixture)], {
 		concurrency: 1
 	}), TypeError);
