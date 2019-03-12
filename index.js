@@ -13,11 +13,11 @@ const sum = iterable => {
 
 class PProgress extends Promise {
 	static fn(input) {
-		return (...args) => {
+		return (...arguments_) => {
 			return new PProgress(async (resolve, reject, progress) => {
-				args.push(progress);
+				arguments_.push(progress);
 				try {
-					resolve(await input(...args));
+					resolve(await input(...arguments_));
 				} catch (error) {
 					reject(error);
 				}
@@ -26,7 +26,10 @@ class PProgress extends Promise {
 	}
 
 	static all(promises, options) {
-		if (options && typeof options.concurrency === 'number' && !(promises.every(p => typeof p === 'function'))) {
+		if (
+			options && typeof options.concurrency === 'number' &&
+			!(promises.every(promise => typeof promise === 'function'))
+		) {
 			throw new TypeError('When `options.concurrency` is set, the first argument must be an Array of Promise-returning functions');
 		}
 
@@ -63,7 +66,7 @@ class PProgress extends Promise {
 	}
 
 	constructor(executor) {
-		const progressFn = progress => {
+		const setProgress = progress => {
 			if (progress > 1 || progress < 0) {
 				throw new TypeError('The progress percentage should be a number between 0 and 1');
 			}
@@ -91,20 +94,20 @@ class PProgress extends Promise {
 		super((resolve, reject) => {
 			executor(
 				value => {
-					progressFn(1);
+					setProgress(1);
 					resolve(value);
 				},
 				reject,
 				progress => {
 					if (progress !== 1) {
-						progressFn(progress);
+						setProgress(progress);
 					}
 				}
 			);
 		});
 
 		this._listeners = new Set();
-		this._progressFn = progressFn;
+		this._setProgress = setProgress;
 		this._progress = 0;
 	}
 
@@ -112,12 +115,12 @@ class PProgress extends Promise {
 		return this._progress;
 	}
 
-	onProgress(cb) {
-		if (typeof cb !== 'function') {
-			throw new TypeError(`Expected a \`Function\`, got \`${typeof cb}\``);
+	onProgress(callback) {
+		if (typeof callback !== 'function') {
+			throw new TypeError(`Expected a \`Function\`, got \`${typeof callback}\``);
 		}
 
-		this._listeners.add(cb);
+		this._listeners.add(callback);
 		return this;
 	}
 }

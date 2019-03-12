@@ -78,6 +78,8 @@ Convenience method to make your promise-returning or async function report progr
 The function you specify will have the `progress()` function appended to its parameters.
 
 ```js
+const PProgress = require('p-progress');
+
 const runJob = PProgress.fn(async (name, progress) => {
 	const job = new Job(name);
 
@@ -107,6 +109,7 @@ const runJob = PProgress.fn(async (name, progress) => {
 Convenience method to run multiple promises and get a total progress of all of them. It counts normal promises with progress `0` when pending and progress `1` when resolved. For `PProgress` type promises, it listens to their `onProgress()` method for more fine grained progress reporting. You can mix and match normal promises and `PProgress` promises.
 
 ```js
+const PProgress = require('p-progress');
 const delay = require('delay');
 
 const progressPromise = PProgress.fn(async progress => {

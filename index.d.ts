@@ -27,6 +27,8 @@ export default class PProgress<T> extends Promise<T> {
 	 *
 	 * @example
 	 *
+	 * import PProgress from 'p-progress';
+	 *
 	 * const runJob = PProgress.fn(async (name, progress) => {
 	 * 	const job = new Job(name);
 	 *
@@ -295,7 +297,9 @@ export default class PProgress<T> extends Promise<T> {
 	 *
 	 * @example
 	 *
-	 * const delay = require('delay');
+	 * import PProgress from 'p-progress';
+	 * import delay from 'delay';
+	 *
 	 * const progressPromise = PProgress.fn(async progress => {
 	 * 	progress(0.14);
 	 * 	await delay(52);
