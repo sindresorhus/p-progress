@@ -123,3 +123,4 @@ class PProgress extends Promise {
 }
 
 module.exports = PProgress;
+module.exports.default = PProgress;
