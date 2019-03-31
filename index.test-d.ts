@@ -1,5 +1,6 @@
-import {expectType} from 'tsd-check';
-import PProgress, {ProgressNotifier} from '.';
+import {expectType} from 'tsd';
+import PProgress = require('.');
+import {ProgressNotifier} from '.';
 
 const progressPromise = new PProgress(async (resolve, reject, progress) => {
 	expectType<(progress: number) => void>(progress);
