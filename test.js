@@ -143,5 +143,8 @@ test('PProgress.all() with concurrency = 1', async t => {
 		fixture
 	]);
 
-	t.true(inRange(end(), 200 /* 4 delays of 50ms each */, 250 /* reasonable padding */));
+	t.true(inRange(end(), {
+		start: 200, // 4 delays of 50ms each
+		end: 250 // Reasonable padding
+	}));
 });

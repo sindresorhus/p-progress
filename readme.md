@@ -104,7 +104,7 @@ const runJob = PProgress.fn(async (name, progress) => {
 })();
 ```
 
-### PProgress.all(promises, [options])
+### PProgress.all(promises, options?)
 
 Convenience method to run multiple promises and get a total progress of all of them. It counts normal promises with progress `0` when pending and progress `1` when resolved. For `PProgress` type promises, it listens to their `onProgress()` method for more fine grained progress reporting. You can mix and match normal promises and `PProgress` promises.
 
@@ -152,7 +152,7 @@ Array of promises or promise-returning functions, similar to [p-all](https://git
 
 #### options
 
-Type: `Object`
+Type: `object`
 
 ##### concurrency
 
@@ -171,8 +171,3 @@ When this option is set, the first argument must be an array of promise-returnin
 
 - [p-cancelable](https://github.com/sindresorhus/p-cancelable) - Create a promise that can be canceled
 - [More…](https://github.com/sindresorhus/promise-fun)
-
-
-## License
-
-MIT © [Sindre Sorhus](https://sindresorhus.com)
