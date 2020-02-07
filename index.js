@@ -75,9 +75,9 @@ class PProgress extends Promise {
 				// We wait for the next microtask tick so `super` is called before we use `this`
 				await Promise.resolve();
 
-                               // Note: we don't really have guarantees over
-                               // the order in which async operations are evaluated,
-                               // so if we get an out-of-order progress, we'll just discard it.
+				// Note: we don't really have guarantees over
+				// the order in which async operations are evaluated,
+				// so if we get an out-of-order progress, we'll just discard it.
 				if (progress <= this._progress) {
 					return;
 				}
