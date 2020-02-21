@@ -75,12 +75,11 @@ class PProgress extends Promise {
 				// We wait for the next microtask tick so `super` is called before we use `this`
 				await Promise.resolve();
 
-				if (progress === this._progress) {
+				// Note: we don't really have guarantees over
+				// the order in which async operations are evaluated,
+				// so if we get an out-of-order progress, we'll just discard it.
+				if (progress <= this._progress) {
 					return;
-				}
-
-				if (progress < this._progress) {
-					throw new Error('The progress percentage can\'t be lower than the last progress event');
 				}
 
 				this._progress = progress;
