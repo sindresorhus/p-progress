@@ -4,13 +4,11 @@
 
 Useful for reporting progress to the user during long-running async operations.
 
-
 ## Install
 
 ```
 $ npm install p-progress
 ```
-
 
 ## Usage
 
@@ -42,7 +40,6 @@ const progressPromise = new PProgress((resolve, reject, progress) => {
 })();
 ```
 
-
 ## API
 
 ### instance = new PProgress(executor)
@@ -58,7 +55,9 @@ Type: `Function`
 Call this with progress updates. It expects a number between 0 and 1.
 
 Multiple calls with the same number will result in only one `onProgress()`
-event. Calling with a number lower than previously will be ignored.
+event.
+
+Calling with a number lower than previously will be ignored.
 
 Progress percentage `1` is reported for you when the promise resolves. If you set it yourself, it will simply be ignored.
 
@@ -147,7 +146,7 @@ const allProgressPromise = PProgress.all([
 
 #### promises
 
-Type: `Array`
+Type: `Promise[]`
 
 Array of promises or promise-returning functions, similar to [p-all](https://github.com/sindresorhus/p-all).
 
@@ -157,8 +156,8 @@ Type: `object`
 
 ##### concurrency
 
-Type: `number`<br>
-Default: `Infinity`<br>
+Type: `number`\
+Default: `Infinity`\
 Minimum: `1`
 
 Number of concurrently pending promises.
@@ -166,7 +165,6 @@ Number of concurrently pending promises.
 To run the promises in series, set it to `1`.
 
 When this option is set, the first argument must be an array of promise-returning functions.
-
 
 ## Related
 
