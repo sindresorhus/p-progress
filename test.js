@@ -7,7 +7,7 @@ import PProgress from '.';
 const fixture = Symbol('fixture');
 
 test('new PProgress()', async t => {
-	t.plan(22);
+	t.plan(52);
 
 	const p = new PProgress(async (resolve, reject, progress) => {
 		progress(0.1);
@@ -32,6 +32,22 @@ test('new PProgress()', async t => {
 	});
 
 	p.onProgress(progress => {
+		t.is(progress, p.progress);
+		t.true(progress >= 0 && progress <= 1);
+	});
+
+	// eslint-disable-next-line promise/prefer-await-to-then
+	p.then(() => {}).onProgress(progress => {
+		t.is(progress, p.progress);
+		t.true(progress >= 0 && progress <= 1);
+	});
+
+	p.catch(() => {}).onProgress(progress => {
+		t.is(progress, p.progress);
+		t.true(progress >= 0 && progress <= 1);
+	});
+
+	p.finally(() => {}).onProgress(progress => {
 		t.is(progress, p.progress);
 		t.true(progress >= 0 && progress <= 1);
 	});

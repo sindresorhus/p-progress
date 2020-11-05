@@ -122,6 +122,12 @@ class PProgress extends Promise {
 		this._listeners.add(callback);
 		return this;
 	}
+
+	then(onFulfilled, onRejected) {
+		// eslint-disable-next-line promise/prefer-await-to-then
+		super.then(onFulfilled, onRejected);
+		return this;
+	}
 }
 
 module.exports = PProgress;
