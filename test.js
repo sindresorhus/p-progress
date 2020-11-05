@@ -7,7 +7,7 @@ import PProgress from '.';
 const fixture = Symbol('fixture');
 
 test('new PProgress()', async t => {
-	t.plan(52);
+	t.plan(42);
 
 	const p = new PProgress(async (resolve, reject, progress) => {
 		progress(0.1);
@@ -43,11 +43,6 @@ test('new PProgress()', async t => {
 	});
 
 	p.catch(() => {}).onProgress(progress => {
-		t.is(progress, p.progress);
-		t.true(progress >= 0 && progress <= 1);
-	});
-
-	p.finally(() => {}).onProgress(progress => {
 		t.is(progress, p.progress);
 		t.true(progress >= 0 && progress <= 1);
 	});
