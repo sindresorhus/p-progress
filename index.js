@@ -125,8 +125,11 @@ class PProgress extends Promise {
 
 	then(onFulfilled, onRejected) {
 		// eslint-disable-next-line promise/prefer-await-to-then
-		super.then(onFulfilled, onRejected);
-		return this;
+		const child = super.then(onFulfilled, onRejected);
+		this._listeners.add(progress => {
+			child._setProgress(progress);
+		});
+		return child;
 	}
 }
 
