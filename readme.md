@@ -15,18 +15,18 @@ $ npm install p-progress
 ```js
 const PProgress = require('p-progress');
 
-const progressPromise = new PProgress((resolve, reject, progress) => {
-	const job = new Job();
+(async () => {
+	const progressPromise = new PProgress((resolve, reject, progress) => {
+		const job = new Job();
 
-	job.on('data', data => {
-		progress(data.length / job.totalSize);
+		job.on('data', data => {
+			progress(data.length / job.totalSize);
+		});
+
+		job.on('finish', resolve);
+		job.on('error', reject);
 	});
 
-	job.on('finish', resolve);
-	job.on('error', reject);
-});
-
-(async () => {
 	progressPromise.onProgress(progress => {
 		console.log(`${progress * 100}%`);
 		//=> 9%
