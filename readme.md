@@ -38,6 +38,29 @@ const PProgress = require('p-progress');
 
 	await progressPromise;
 })();
+
+(async () => {
+	const doTheThings = PProgress.fn(async progress => {
+		await doFirstThing();
+		progress(0.2);
+		await doSecondThing();
+		progress(0.7);
+		await doLastThing();
+		return 'done!';
+	});
+
+	const progressPromise = doTheThings();
+
+	progressPromise.onProgress(progress => {
+		console.log(`${progress * 100}%`);
+		//=> 20%
+		//=> 70%
+		//=> 100%
+	});
+
+	console.log(await progressPromise);
+	//=> 'done!'
+})();
 ```
 
 ## API
