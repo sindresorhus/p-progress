@@ -1,4 +1,4 @@
-# p-progress [![Build Status](https://travis-ci.org/sindresorhus/p-progress.svg?branch=master)](https://travis-ci.org/sindresorhus/p-progress)
+# p-progress
 
 > Create a promise that reports progress
 
