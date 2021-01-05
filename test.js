@@ -52,6 +52,7 @@ test('new PProgress()', async t => {
 	});
 
 	t.is(await p, fixture);
+	await delay(1);
 });
 
 test('PProgress.fn()', async t => {
