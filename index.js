@@ -1,5 +1,5 @@
 'use strict';
-const pMap = require('p-map');
+const pTimes = require('p-times');
 
 const sum = iterable => {
 	let total = 0;
@@ -35,15 +35,14 @@ class PProgress extends Promise {
 
 		return PProgress.fn(progress => {
 			const progressMap = new Map();
-			const iterator = promises[Symbol.iterator]();
 
 			const reportProgress = () => {
 				progress(sum(progressMap) / promises.length);
 			};
 
-			const mapper = async () => {
-				const next = iterator.next().value;
-				const promise = typeof next === 'function' ? next() : next;
+			const mapper = async index => {
+				const nextValue = promises[index]
+				const promise = typeof nextValue === 'function' ? nextValue() : nextValue;
 				progressMap.set(promise, 0);
 
 				if (promise instanceof PProgress) {
@@ -59,9 +58,7 @@ class PProgress extends Promise {
 				return value;
 			};
 
-			// TODO: This is kinda ugly. Find a better way to do this.
-			// Maybe `p-map` could accept a number as the first argument?
-			return pMap(new Array(promises.length), mapper, options);
+			return pTimes(promises.length, mapper, options);
 		})();
 	}
 
