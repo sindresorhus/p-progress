@@ -32,7 +32,7 @@
 		"bluebird"
 	],
 	"dependencies": {
-		"p-map": "^3.0.0"
+		"p-times": "^3.0.0"
 	},
 	"devDependencies": {
 		"ava": "^2.2.0",
