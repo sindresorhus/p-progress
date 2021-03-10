@@ -41,7 +41,7 @@ class PProgress extends Promise {
 			};
 
 			const mapper = async index => {
-				const nextValue = promises[index]
+				const nextValue = promises[index];
 				const promise = typeof nextValue === 'function' ? nextValue() : nextValue;
 				progressMap.set(promise, 0);
 
