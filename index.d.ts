@@ -717,12 +717,12 @@ declare class PProgress<ValueType> extends Promise<ValueType> {
 	static all<AllValuesType>(
 		promises: Iterable<PProgress.PromiseFactory<AllValuesType>>,
 		options: PProgress.Options
-	): PProgress<AllValuesType>;
+	): PProgress<Iterable<AllValuesType>>;
 	static all<AllValuesType>(
 		promises: Iterable<
 			PromiseLike<AllValuesType> | PProgress.PromiseFactory<AllValuesType>
 		>
-	): PProgress<AllValuesType>;
+	): PProgress<Iterable<AllValuesType>>;
 
 	/**
 	Same as the [`Promise` constructor](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise).
