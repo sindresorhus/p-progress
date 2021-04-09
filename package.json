@@ -1,6 +1,6 @@
 {
 	"name": "p-progress",
-	"version": "0.5.0",
+	"version": "0.5.1",
 	"description": "Create a promise that reports progress",
 	"license": "MIT",
 	"repository": "sindresorhus/p-progress",
