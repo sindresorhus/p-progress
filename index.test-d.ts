@@ -635,7 +635,7 @@ expectType<
 	)
 );
 
-expectType<PProgress<string | number | boolean | symbol | string[]>>(
+expectType<PProgress<Iterable<string | number | boolean | symbol | string[]>>>(
 	PProgress.all<string | number | boolean | symbol | string[]>([
 		Promise.resolve('sindresorhus.com'),
 		Promise.resolve(1),
@@ -650,7 +650,7 @@ expectType<PProgress<string | number | boolean | symbol | string[]>>(
 		Promise.resolve(['foo'])
 	])
 );
-expectType<PProgress<string | number | boolean | symbol | string[]>>(
+expectType<PProgress<Iterable<string | number | boolean | symbol | string[]>>>(
 	PProgress.all<string | number | boolean | symbol | string[]>([
 		() => Promise.resolve('sindresorhus.com'),
 		() => Promise.resolve(1),
@@ -665,7 +665,7 @@ expectType<PProgress<string | number | boolean | symbol | string[]>>(
 		() => Promise.resolve(['foo'])
 	])
 );
-expectType<PProgress<string | number | boolean | symbol | string[]>>(
+expectType<PProgress<Iterable<string | number | boolean | symbol | string[]>>>(
 	PProgress.all<string | number | boolean | symbol | string[]>(
 		[
 			() => Promise.resolve('sindresorhus.com'),
@@ -684,7 +684,7 @@ expectType<PProgress<string | number | boolean | symbol | string[]>>(
 	)
 );
 
-expectType<PProgress<string | number | boolean | symbol | string[]>>(
+expectType<PProgress<Iterable<string | number | boolean | symbol | string[]>>>(
 	PProgress.all<string | number | boolean | symbol | string[]>(
 		new Set([
 			Promise.resolve('sindresorhus.com'),
@@ -701,7 +701,7 @@ expectType<PProgress<string | number | boolean | symbol | string[]>>(
 		])
 	)
 );
-expectType<PProgress<string | number | boolean | symbol | string[]>>(
+expectType<PProgress<Iterable<string | number | boolean | symbol | string[]>>>(
 	PProgress.all<string | number | boolean | symbol | string[]>(
 		new Set([
 			() => Promise.resolve('sindresorhus.com'),
@@ -718,7 +718,7 @@ expectType<PProgress<string | number | boolean | symbol | string[]>>(
 		])
 	)
 );
-expectType<PProgress<string | number | boolean | symbol | string[]>>(
+expectType<PProgress<Iterable<string | number | boolean | symbol | string[]>>>(
 	PProgress.all<string | number | boolean | symbol | string[]>(
 		new Set([
 			() => Promise.resolve('sindresorhus.com'),
