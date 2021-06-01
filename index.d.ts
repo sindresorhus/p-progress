@@ -1,4 +1,4 @@
-type Awaited<T> = T extends undefined ? T : T extends PromiseLike<infer U> ? U : T;
+type Awaited<ValueType> = ValueType extends undefined ? ValueType : ValueType extends PromiseLike<infer ResolveValueType> ? ResolveValueType : ValueType;
 
 declare namespace PProgress {
 	interface Options {
