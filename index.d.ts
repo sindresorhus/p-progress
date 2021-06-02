@@ -108,7 +108,16 @@ declare class PProgress<ValueType> extends Promise<ValueType> {
 		promises: readonly [...Promises],
 		options?: PProgress.Options
 	): PProgress<{
-		[Promise_ in keyof Promises]: Promises[Promise_] extends PromiseLike<unknown> ? Awaited<Promises[Promise_]> : (Promises[Promise_] extends PProgress.PromiseFactory<unknown> ? Awaited<ReturnType<Promises[Promise_]>> : Promises[Promise_])
+		[Promise_ in keyof Promises]: (
+			Promises[Promise_] extends PromiseLike<unknown>
+				? Awaited<Promises[Promise_]>
+				: (
+					Promises[Promise_] extends PProgress.PromiseFactory<unknown>
+						? Awaited<ReturnType<Promises[Promise_]>>
+						: Promises[Promise_]
+				)
+		)
+
 	}>;
 	static all<ReturnValue>(
 		promises: Iterable<PProgress.PromiseFactory<ReturnValue> | PromiseLike<ReturnValue>>,
