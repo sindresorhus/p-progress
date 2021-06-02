@@ -13,40 +13,6 @@ $ npm install p-progress
 ## Usage
 
 ```js
-import {PProgress} from 'p-progress';
-
-const progressPromise = new PProgress((resolve, reject, progress) => {
-	const job = new Job();
-
-	job.on('data', data => {
-		progress(data.length / job.totalSize);
-	});
-
-	job.on('finish', resolve);
-	job.on('error', reject);
-});
-
-progressPromise.onProgress(progress => {
-	console.log(`${progress * 100}%`);
-	//=> 9%
-	//=> 23%
-	//=> 59%
-	//=> 75%
-	//=> 100%
-});
-
-await progressPromise;
-```
-
-## API
-
-### pProgress(function)
-
-Convenience method to make your promise-returning or async function report progress.
-
-The function you specify will be passed the `progress()` function as a parameter.
-
-```js
 import pProgress from 'p-progress';
 
 const runJob = async name => pProgress(async progress => {
@@ -70,6 +36,14 @@ progressPromise.onProgress(console.log);
 
 await progressPromise;
 ```
+
+## API
+
+### pProgress(function)
+
+Convenience method to make your promise-returning or async function report progress.
+
+The function you specify will be passed the `progress()` function as a parameter.
 
 ### instance = new PProgress(executor)
 
@@ -99,6 +73,32 @@ The current progress percentage of the promise as a number between 0 and 1.
 #### instance.onProgress(function)
 
 Accepts a function that gets `instance.progress` as an argument and is called for every progress event.
+
+```js
+import {PProgress} from 'p-progress';
+
+const progressPromise = new PProgress((resolve, reject, progress) => {
+	const job = new Job();
+
+	job.on('data', data => {
+		progress(data.length / job.totalSize);
+	});
+
+	job.on('finish', resolve);
+	job.on('error', reject);
+});
+
+progressPromise.onProgress(progress => {
+	console.log(`${progress * 100}%`);
+	//=> 9%
+	//=> 23%
+	//=> 59%
+	//=> 75%
+	//=> 100%
+});
+
+await progressPromise;
+```
 
 ### PProgress.all(promises, options?)
 
