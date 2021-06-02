@@ -236,7 +236,7 @@ expectType<
 		}
 	)
 );
-expectType<(...args: unknown[]) => PProgress<boolean>>(
+expectType<(string: string, boolean: boolean, number: number, symbol: symbol, array: string[], string2: string, boolean2: boolean, number2: number, symbol2: symbol, array2: string[], string3: string) => PProgress<boolean>>(
 	PProgress.fn(
 		async (
 			string: string,
@@ -635,8 +635,8 @@ expectType<
 	)
 );
 
-expectType<PProgress<Iterable<string | number | boolean | symbol | string[]>>>(
-	PProgress.all<string | number | boolean | symbol | string[]>([
+expectType<PProgress<[string, number, boolean, symbol, string[], string, number, boolean, symbol, string[], string[]]>>(
+	PProgress.all([
 		Promise.resolve('sindresorhus.com'),
 		Promise.resolve(1),
 		Promise.resolve(true),
@@ -650,8 +650,8 @@ expectType<PProgress<Iterable<string | number | boolean | symbol | string[]>>>(
 		Promise.resolve(['foo'])
 	])
 );
-expectType<PProgress<Iterable<string | number | boolean | symbol | string[]>>>(
-	PProgress.all<string | number | boolean | symbol | string[]>([
+expectType<PProgress<[string, number, boolean, symbol, string[], string, number, boolean, symbol, string[], string[]]>>(
+	PProgress.all([
 		() => Promise.resolve('sindresorhus.com'),
 		() => Promise.resolve(1),
 		() => Promise.resolve(true),
@@ -665,8 +665,8 @@ expectType<PProgress<Iterable<string | number | boolean | symbol | string[]>>>(
 		() => Promise.resolve(['foo'])
 	])
 );
-expectType<PProgress<Iterable<string | number | boolean | symbol | string[]>>>(
-	PProgress.all<string | number | boolean | symbol | string[]>(
+expectType<PProgress<[string, number, boolean, symbol, string[], string, number, boolean, symbol, string[], string[]]>>(
+	PProgress.all(
 		[
 			() => Promise.resolve('sindresorhus.com'),
 			() => Promise.resolve(1),
