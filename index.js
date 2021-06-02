@@ -1,5 +1,4 @@
-'use strict';
-const pTimes = require('p-times');
+import pTimes from 'p-times';
 
 const sum = iterable => {
 	let total = 0;
@@ -11,20 +10,7 @@ const sum = iterable => {
 	return total;
 };
 
-class PProgress extends Promise {
-	static fn(input) {
-		return (...arguments_) => {
-			return new PProgress(async (resolve, reject, progress) => {
-				arguments_.push(progress);
-				try {
-					resolve(await input(...arguments_));
-				} catch (error) {
-					reject(error);
-				}
-			});
-		};
-	}
-
+export class PProgress extends Promise {
 	static all(promises, options) {
 		if (
 			options && typeof options.concurrency === 'number' &&
@@ -33,7 +19,7 @@ class PProgress extends Promise {
 			throw new TypeError('When `options.concurrency` is set, the first argument must be an Array of Promise-returning functions');
 		}
 
-		return PProgress.fn(progress => {
+		return pProgress(progress => {
 			const progressMap = new Map();
 
 			const reportProgress = () => {
@@ -59,7 +45,7 @@ class PProgress extends Promise {
 			};
 
 			return pTimes(promises.length, mapper, options);
-		})();
+		});
 	}
 
 	constructor(executor) {
@@ -130,4 +116,12 @@ class PProgress extends Promise {
 	}
 }
 
-module.exports = PProgress;
+const pProgress = input => new PProgress(async (resolve, reject, progress) => {
+	try {
+		resolve(await input(progress));
+	} catch (error) {
+		reject(error);
+	}
+});
+
+export default pProgress;
