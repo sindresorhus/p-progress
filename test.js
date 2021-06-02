@@ -2,7 +2,7 @@ import test from 'ava';
 import delay from 'delay';
 import timeSpan from 'time-span';
 import inRange from 'in-range';
-import PProgress from '.';
+import pProgress, {PProgress} from './index.js';
 
 const fixture = Symbol('fixture');
 
@@ -39,13 +39,16 @@ test('new PProgress()', async t => {
 	// eslint-disable-next-line promise/prefer-await-to-then
 	p.then(result => [result, result]).then(results => {
 		t.true(Array.isArray(results));
-		results.forEach(result => t.is(result, fixture));
+		for (const result of results) {
+			t.is(result, fixture);
+		}
 	})
 		.onProgress(progress => {
 			t.is(progress, p.progress);
 			t.true(progress >= 0 && progress <= 1);
 		});
 
+	// eslint-disable-next-line promise/prefer-await-to-then
 	p.catch(() => {}).onProgress(progress => {
 		t.is(progress, p.progress);
 		t.true(progress >= 0 && progress <= 1);
@@ -55,10 +58,10 @@ test('new PProgress()', async t => {
 	await delay(1);
 });
 
-test('PProgress.fn()', async t => {
+test('pProgress()', async t => {
 	t.plan(4);
 
-	const fn = PProgress.fn(async (input, progress) => {
+	const fn = input => pProgress(async progress => {
 		progress(0.1);
 		await delay(50);
 		progress(0.6);
@@ -77,7 +80,7 @@ test('PProgress.fn()', async t => {
 });
 
 test('PProgress.all()', async t => {
-	const fixtureFn = PProgress.fn(async (input, progress) => {
+	const fixtureFn = input => pProgress(async progress => {
 		progress(0.16);
 		await delay(50);
 		progress(0.55);
@@ -85,7 +88,7 @@ test('PProgress.all()', async t => {
 		return input;
 	});
 
-	const fixtureFn2 = PProgress.fn(async (input, progress) => {
+	const fixtureFn2 = input => pProgress(async progress => {
 		progress(0.14);
 		await delay(52);
 		progress(0.37);
@@ -121,7 +124,7 @@ test('PProgress.all()', async t => {
 });
 
 test('PProgress.all() with concurrency = 1', async t => {
-	const fixtureFn = PProgress.fn(async (input, progress) => {
+	const fixtureFn = input => pProgress(async progress => {
 		progress(0.16);
 		await delay(50);
 		progress(0.55);
@@ -129,7 +132,7 @@ test('PProgress.all() with concurrency = 1', async t => {
 		return input;
 	});
 
-	const fixtureFn2 = PProgress.fn(async (input, progress) => {
+	const fixtureFn2 = input => pProgress(async progress => {
 		progress(0.41);
 		await delay(50);
 		progress(0.93);
@@ -140,7 +143,9 @@ test('PProgress.all() with concurrency = 1', async t => {
 	// Should throw when first argument is array of promises instead of promise-returning functions
 	t.throws(() => PProgress.all([fixtureFn(fixture), fixtureFn2(fixture)], {
 		concurrency: 1
-	}), TypeError);
+	}), {
+		instanceOf: TypeError
+	});
 
 	const end = timeSpan();
 	const p = PProgress.all([

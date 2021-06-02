@@ -10,8 +10,10 @@
 		"email": "sindresorhus@gmail.com",
 		"url": "https://sindresorhus.com"
 	},
+	"type": "module",
+	"exports": "./index.js",
 	"engines": {
-		"node": ">=8"
+		"node": ">=12.2"
 	},
 	"scripts": {
 		"test": "xo && ava && tsd"
@@ -35,11 +37,24 @@
 		"p-times": "^3.0.0"
 	},
 	"devDependencies": {
-		"ava": "^2.2.0",
-		"delay": "^4.1.0",
-		"in-range": "^2.0.0",
-		"time-span": "^3.0.0",
+		"@babel/eslint-parser": "^7.14.4",
+		"@babel/plugin-syntax-top-level-await": "^7.12.13",
+		"ava": "^3.15.0",
+		"delay": "^5.0.0",
+		"in-range": "^3.0.0",
+		"time-span": "^5.0.0",
 		"tsd": "^0.16.0",
-		"xo": "^0.24.0"
+		"xo": "^0.40.1"
+	},
+	"xo": {
+		"parser": "@babel/eslint-parser",
+		"parserOptions": {
+			"requireConfigFile": false,
+			"babelOptions": {
+				"plugins": [
+					"@babel/plugin-syntax-top-level-await"
+				]
+			}
+		}
 	}
 }

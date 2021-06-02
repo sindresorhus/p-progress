@@ -13,34 +13,63 @@ $ npm install p-progress
 ## Usage
 
 ```js
-const PProgress = require('p-progress');
+import {PProgress} from 'p-progress';
 
-(async () => {
-	const progressPromise = new PProgress((resolve, reject, progress) => {
-		const job = new Job();
+const progressPromise = new PProgress((resolve, reject, progress) => {
+	const job = new Job();
 
-		job.on('data', data => {
-			progress(data.length / job.totalSize);
-		});
-
-		job.on('finish', resolve);
-		job.on('error', reject);
+	job.on('data', data => {
+		progress(data.length / job.totalSize);
 	});
 
-	progressPromise.onProgress(progress => {
-		console.log(`${progress * 100}%`);
-		//=> 9%
-		//=> 23%
-		//=> 59%
-		//=> 75%
-		//=> 100%
-	});
+	job.on('finish', resolve);
+	job.on('error', reject);
+});
 
-	await progressPromise;
-})();
+progressPromise.onProgress(progress => {
+	console.log(`${progress * 100}%`);
+	//=> 9%
+	//=> 23%
+	//=> 59%
+	//=> 75%
+	//=> 100%
+});
+
+await progressPromise;
 ```
 
 ## API
+
+### pProgress(function)
+
+Convenience method to make your promise-returning or async function report progress.
+
+The function you specify will be passed the `progress()` function as a parameter.
+
+```js
+import pProgress from 'p-progress';
+
+const runJob = async name => pProgress(async progress => {
+	const job = new Job(name);
+
+	job.on('data', data => {
+		progress(data.length / job.totalSize)
+	});
+
+	await job.run()
+});
+
+const progressPromise = runJob('Gather rainbows');
+
+progressPromise.onProgress(console.log);
+//=> 0.09
+//=> 0.23
+//=> 0.59
+//=> 0.75
+//=> 1
+
+await progressPromise;
+```
 
 ### instance = new PProgress(executor)
 
@@ -71,48 +100,15 @@ The current progress percentage of the promise as a number between 0 and 1.
 
 Accepts a function that gets `instance.progress` as an argument and is called for every progress event.
 
-### PProgress.fn(function)
-
-Convenience method to make your promise-returning or async function report progress.
-
-The function you specify will have the `progress()` function appended to its parameters.
-
-```js
-const PProgress = require('p-progress');
-
-const runJob = PProgress.fn(async (name, progress) => {
-	const job = new Job(name);
-
-	job.on('data', data => {
-		progress(data.length / job.totalSize);
-	});
-
-	await job.run();
-});
-
-(async () => {
-	const progressPromise = runJob('Gather rainbows');
-
-	progressPromise.onProgress(console.log);
-	//=> 0.09
-	//=> 0.23
-	//=> 0.59
-	//=> 0.75
-	//=> 1
-
-	await progressPromise;
-})();
-```
-
 ### PProgress.all(promises, options?)
 
 Convenience method to run multiple promises and get a total progress of all of them. It counts normal promises with progress `0` when pending and progress `1` when resolved. For `PProgress` type promises, it listens to their `onProgress()` method for more fine grained progress reporting. You can mix and match normal promises and `PProgress` promises.
 
 ```js
-const PProgress = require('p-progress');
-const delay = require('delay');
+import pProgress, {PProgress} from 'p-progress';
+import delay from 'delay';
 
-const progressPromise = PProgress.fn(async progress => {
+const progressPromise = () => pProgress(async progress => {
 	progress(0.14);
 	await delay(52);
 	progress(0.37);
@@ -130,18 +126,16 @@ const allProgressPromise = PProgress.all([
 	delay(209)
 ]);
 
-(async () => {
-	allProgressPromise.onProgress(console.log);
-	//=> 0.0925
-	//=> 0.3425
-	//=> 0.5925
-	//=> 0.6025
-	//=> 0.7325
-	//=> 0.9825
-	//=> 1
+allProgressPromise.onProgress(console.log);
+//=> 0.0925
+//=> 0.3425
+//=> 0.5925
+//=> 0.6025
+//=> 0.7325
+//=> 0.9825
+//=> 1
 
-	await allProgressPromise;
-})();
+await allProgressPromise;
 ```
 
 #### promises

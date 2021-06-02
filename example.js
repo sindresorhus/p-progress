@@ -1,8 +1,7 @@
-'use strict';
-const delay = require('delay');
-const PProgress = require('.');
+import pProgress, {PProgress} from 'p-progress';
+import delay from 'delay';
 
-const progressPromise = PProgress.fn(async progress => {
+const progressPromise = () => pProgress(async progress => {
 	progress(0.14);
 	await delay(52);
 	progress(0.37);
@@ -20,8 +19,6 @@ const allProgressPromise = PProgress.all([
 	delay(209)
 ]);
 
-(async () => {
-	allProgressPromise.onProgress(console.log);
+allProgressPromise.onProgress(console.log);
 
-	await allProgressPromise;
-})();
+await allProgressPromise;
