@@ -104,6 +104,10 @@ await progressPromise;
 
 Convenience method to run multiple promises and get a total progress of all of them. It counts normal promises with progress `0` when pending and progress `1` when resolved. For `PProgress` type promises, it listens to their `onProgress()` method for more fine grained progress reporting. You can mix and match normal promises and `PProgress` promises.
 
+### PProgress.allSettled(promises, options?)
+
+Like [`Promise.allSettled`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled) but also allowing you to get a total progress of all of them like [`PProgress.all`](#pprogressallpromises-options).
+
 ```js
 import pProgress, {PProgress} from 'p-progress';
 import delay from 'delay';
@@ -117,13 +121,24 @@ const progressPromise = () => pProgress(async progress => {
 	await delay(26);
 	progress(0.93);
 	await delay(55);
+	return 1;
 });
 
-const allProgressPromise = PProgress.all([
-	delay(103),
+const progressPromise2 = () => pProgress(async progress => {
+	progress(0.14);
+	await delay(52);
+	progress(0.37);
+	await delay(104);
+	progress(0.41);
+	await delay(26);
+	progress(0.93);
+	await delay(55);
+	throw new Error('Catch me if you can!');
+});
+
+const allProgressPromise = PProgress.allSettled([
 	progressPromise(),
-	delay(55),
-	delay(209)
+	progressPromise2()
 ]);
 
 allProgressPromise.onProgress(console.log);
@@ -135,7 +150,8 @@ allProgressPromise.onProgress(console.log);
 //=> 0.9825
 //=> 1
 
-await allProgressPromise;
+console.log(await allProgressPromise);
+//=> [{status: 'fulfilled', value: 1}, {status: 'rejected', reason: Error: Catch me if you can!}]
 ```
 
 #### promises

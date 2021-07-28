@@ -13,7 +13,7 @@
 	"type": "module",
 	"exports": "./index.js",
 	"engines": {
-		"node": ">=12.2"
+		"node": ">=12"
 	},
 	"scripts": {
 		"test": "xo && ava && tsd"

@@ -48,6 +48,53 @@ export class PProgress extends Promise {
 		});
 	}
 
+	static allSettled(promises, options) {
+		if (
+			options && typeof options.concurrency === 'number' &&
+			!(promises.every(promise => typeof promise === 'function'))
+		) {
+			throw new TypeError('When `options.concurrency` is set, the first argument must be an Array of Promise-returning functions');
+		}
+
+		return pProgress(progress => {
+			const progressMap = new Map();
+
+			const reportProgress = () => {
+				progress(sum(progressMap) / promises.length);
+			};
+
+			const mapper = async index => {
+				const nextValue = promises[index];
+				const promise = typeof nextValue === 'function' ? nextValue() : nextValue;
+				progressMap.set(promise, 0);
+
+				if (promise instanceof PProgress) {
+					promise.onProgress(percentage => {
+						progressMap.set(promise, percentage);
+						reportProgress();
+					});
+				}
+
+				try {
+					return {
+						status: 'fulfilled',
+						value: await promise
+					};
+				} catch (error) {
+					return {
+						status: 'rejected',
+						reason: error
+					};
+				} finally {
+					progressMap.set(promise, 1);
+					reportProgress();
+				}
+			};
+
+			return pTimes(promises.length, mapper, options);
+		});
+	}
+
 	constructor(executor) {
 		const setProgress = progress => {
 			if (progress > 1 || progress < 0) {
@@ -116,12 +163,12 @@ export class PProgress extends Promise {
 	}
 }
 
-const pProgress = input => new PProgress(async (resolve, reject, progress) => {
-	try {
-		resolve(await input(progress));
-	} catch (error) {
-		reject(error);
-	}
-});
-
-export default pProgress;
+export default function pProgress(input) {
+	return new PProgress(async (resolve, reject, progress) => {
+		try {
+			resolve(await input(progress));
+		} catch (error) {
+			reject(error);
+		}
+	});
+}
