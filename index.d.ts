@@ -1,5 +1,14 @@
 type Awaited<ValueType> = ValueType extends undefined ? ValueType : ValueType extends PromiseLike<infer ResolveValueType> ? ResolveValueType : ValueType;
 
+// https://github.com/microsoft/TypeScript/blob/582e404a1041ce95d22939b73f0b4d95be77c6ec/lib/lib.es2020.promise.d.ts#L21-L31
+export type PromiseSettledResult<ResolveValueType> = {
+	status: 'fulfilled';
+	value: ResolveValueType;
+} | {
+	status: 'rejected';
+	reason: unknown;
+};
+
 export interface Options {
 	/**
 	Number of concurrently pending promises. Minimum: `1`.
@@ -132,6 +141,75 @@ export class PProgress<ValueType> extends Promise<ValueType> {
 		promises: Iterable<PromiseFactory<ReturnValue> | PromiseLike<ReturnValue>>,
 		options?: Options
 	): PProgress<Iterable<ReturnValue>>;
+
+	/**
+	Like [`Promise.allSettled`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled) but also exposes the total progress of all of the promises like `PProgress.all`.
+
+	@param promises - Array of promises or promise-returning functions, similar to [p-all](https://github.com/sindresorhus/p-all).
+
+	@example
+	```
+	import pProgress, {PProgress} from 'p-progress';
+	import delay from 'delay';
+
+	const progressPromise = () => pProgress(async progress => {
+		progress(0.14);
+		await delay(52);
+		progress(0.37);
+		await delay(104);
+		progress(0.41);
+		await delay(26);
+		progress(0.93);
+		await delay(55);
+		return 1;
+	});
+
+	const progressPromise2 = () => pProgress(async progress => {
+		progress(0.14);
+		await delay(52);
+		progress(0.37);
+		await delay(104);
+		progress(0.41);
+		await delay(26);
+		progress(0.93);
+		await delay(55);
+		throw new Error('Catch me if you can!');
+	});
+
+	const allProgressPromise = PProgress.allSettled([
+		progressPromise(),
+		progressPromise2()
+	]);
+
+	allProgressPromise.onProgress(console.log);
+	//=> 0.0925
+	//=> 0.3425
+	//=> 0.5925
+	//=> 0.6025
+	//=> 0.7325
+	//=> 0.9825
+	//=> 1
+
+	console.log(await allProgressPromise);
+	//=> [{status: 'fulfilled', value: 1}, {status: 'rejected', reason: Error: Catch me if you can!}]
+	```
+	*/
+	static allSettled<Promises extends Array<PromiseFactory<unknown> | PromiseLike<unknown>>>(
+		promises: readonly [...Promises],
+		options?: Options
+	): PProgress<{
+		[Promise_ in keyof Promises]: PromiseSettledResult<Promises[Promise_] extends PromiseLike<unknown>
+			? Awaited<Promises[Promise_]>
+			: (
+				Promises[Promise_] extends PromiseFactory<unknown>
+					? Awaited<ReturnType<Promises[Promise_]>>
+					: Promises[Promise_]
+			)>
+	}>;
+	static allSettled<ReturnValue>(
+		promises: Iterable<PromiseFactory<ReturnValue> | PromiseLike<ReturnValue>>,
+		options?: Options
+	): PProgress<Iterable<PromiseSettledResult<ReturnValue>>>;
 
 	/**
 	Accepts a function that gets `instance.progress` as an argument and is called for every progress event.
