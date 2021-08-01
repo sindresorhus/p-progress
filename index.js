@@ -48,9 +48,9 @@ export class PProgress extends Promise {
 		});
 	}
 
-	static allSettled(promises, options) {
+	static allSettled(promises, {concurrency} = {}) {
 		if (
-			options && typeof options.concurrency === 'number' &&
+			typeof concurrency === 'number' &&
 			!(promises.every(promise => typeof promise === 'function'))
 		) {
 			throw new TypeError('When `options.concurrency` is set, the first argument must be an Array of Promise-returning functions');
@@ -91,7 +91,9 @@ export class PProgress extends Promise {
 				}
 			};
 
-			return pTimes(promises.length, mapper, options);
+			return pTimes(promises.length, mapper, {
+				concurrency
+			});
 		});
 	}
 

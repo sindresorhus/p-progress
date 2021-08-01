@@ -1,5 +1,5 @@
 import {expectType} from 'tsd';
-import pProgress, {PProgress, ProgressNotifier, SettledPromise} from './index.js';
+import pProgress, {PProgress, ProgressNotifier, PromiseSettledResult} from './index.js';
 
 const progressPromise = new PProgress(async (resolve, reject, progress) => {
 	expectType<(progress: number) => void>(progress);
@@ -497,7 +497,7 @@ expectType<PProgress<Iterable<string | number | boolean | symbol | string[]>>>(
 	)
 );
 expectType<
-PProgress<[SettledPromise<string>, SettledPromise<number>]>
+PProgress<[PromiseSettledResult<string>, PromiseSettledResult<number>]>
 >(
 	PProgress.allSettled([
 		Promise.resolve('sindresorhus.com'),

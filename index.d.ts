@@ -1,5 +1,14 @@
 type Awaited<ValueType> = ValueType extends undefined ? ValueType : ValueType extends PromiseLike<infer ResolveValueType> ? ResolveValueType : ValueType;
 
+// https://github.com/microsoft/TypeScript/blob/582e404a1041ce95d22939b73f0b4d95be77c6ec/lib/lib.es2020.promise.d.ts#L21-L31
+export type PromiseSettledResult<ResolveValueType> = {
+	status: 'fulfilled';
+	value: ResolveValueType;
+} | {
+	status: 'rejected';
+	reason: any;
+};
+
 export interface Options {
 	/**
 	Number of concurrently pending promises. Minimum: `1`.
@@ -16,14 +25,6 @@ export interface Options {
 export type PromiseFactory<ValueType> = () => PromiseLike<ValueType>;
 
 export type ProgressNotifier = (progress: number) => void;
-
-export type SettledPromise<ResolveValueType = unknown> = {
-	status: 'fulfilled';
-	value: ResolveValueType;
-} | {
-	status: 'rejected';
-	reason: Error;
-};
 
 // @ts-expect-error `Promise.all` currently uses an incompatible combinatorics-based type definition (https://github.com/microsoft/TypeScript/issues/39788)
 export class PProgress<ValueType> extends Promise<ValueType> {
@@ -142,7 +143,7 @@ export class PProgress<ValueType> extends Promise<ValueType> {
 	): PProgress<Iterable<ReturnValue>>;
 
 	/**
-	Like [`Promise.allSettled`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled) but also allowing you to get a total progress of all of them like `PProgress.all`.
+	Like [`Promise.allSettled`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled) but also exposes the total progress of all of the promises like `PProgress.all`.
 
 	@param promises - Array of promises or promise-returning functions, similar to [p-all](https://github.com/sindresorhus/p-all).
 
@@ -197,7 +198,7 @@ export class PProgress<ValueType> extends Promise<ValueType> {
 		promises: readonly [...Promises],
 		options?: Options
 	): PProgress<{
-		[Promise_ in keyof Promises]: SettledPromise<Promises[Promise_] extends PromiseLike<unknown>
+		[Promise_ in keyof Promises]: PromiseSettledResult<Promises[Promise_] extends PromiseLike<unknown>
 			? Awaited<Promises[Promise_]>
 			: (
 				Promises[Promise_] extends PromiseFactory<unknown>
@@ -208,7 +209,7 @@ export class PProgress<ValueType> extends Promise<ValueType> {
 	static allSettled<ReturnValue>(
 		promises: Iterable<PromiseFactory<ReturnValue> | PromiseLike<ReturnValue>>,
 		options?: Options
-	): PProgress<Iterable<SettledPromise<ReturnValue>>>;
+	): PProgress<Iterable<PromiseSettledResult<ReturnValue>>>;
 
 	/**
 	Accepts a function that gets `instance.progress` as an argument and is called for every progress event.

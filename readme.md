@@ -106,7 +106,7 @@ Convenience method to run multiple promises and get a total progress of all of t
 
 ### PProgress.allSettled(promises, options?)
 
-Like [`Promise.allSettled`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled) but also allowing you to get a total progress of all of them like [`PProgress.all`](#pprogressallpromises-options).
+Like [`Promise.allSettled`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled) but also exposes the total progress of all of the promises like `PProgress.all`.
 
 ```js
 import pProgress, {PProgress} from 'p-progress';

@@ -10,7 +10,7 @@ const errorFixture = new Error('fixture');
 test('new PProgress()', async t => {
 	t.plan(45);
 
-	const p = new PProgress(async (resolve, reject, progress) => {
+	const promise = new PProgress(async (resolve, reject, progress) => {
 		progress(0.1);
 		await delay(50);
 		progress(0.3);
@@ -25,37 +25,37 @@ test('new PProgress()', async t => {
 		resolve(fixture);
 	});
 
-	t.true(p instanceof Promise);
+	t.true(promise instanceof Promise);
 
-	p.onProgress(progress => {
-		t.is(progress, p.progress);
-		t.true(progress >= 0 && progress <= 1);
+	promise.onProgress(progress => {
+		t.is(progress, promise.progress);
+		t.true(progress >= 0 && progress <= 1, `${progress}`);
 	});
 
-	p.onProgress(progress => {
-		t.is(progress, p.progress);
-		t.true(progress >= 0 && progress <= 1);
+	promise.onProgress(progress => {
+		t.is(progress, promise.progress);
+		t.true(progress >= 0 && progress <= 1, `${progress}`);
 	});
 
 	// eslint-disable-next-line promise/prefer-await-to-then
-	p.then(result => [result, result]).then(results => {
+	promise.then(result => [result, result]).then(results => {
 		t.true(Array.isArray(results));
 		for (const result of results) {
 			t.is(result, fixture);
 		}
 	})
 		.onProgress(progress => {
-			t.is(progress, p.progress);
-			t.true(progress >= 0 && progress <= 1);
+			t.is(progress, promise.progress);
+			t.true(progress >= 0 && progress <= 1, `${progress}`);
 		});
 
 	// eslint-disable-next-line promise/prefer-await-to-then
-	p.catch(() => {}).onProgress(progress => {
-		t.is(progress, p.progress);
-		t.true(progress >= 0 && progress <= 1);
+	promise.catch(() => {}).onProgress(progress => {
+		t.is(progress, promise.progress);
+		t.true(progress >= 0 && progress <= 1, `${progress}`);
 	});
 
-	t.is(await p, fixture);
+	t.is(await promise, fixture);
 	await delay(1);
 });
 
@@ -71,17 +71,17 @@ test('pProgress()', async t => {
 		return input;
 	});
 
-	const p = fn(fixture);
+	const promise = fn(fixture);
 
-	p.onProgress(progress => {
-		t.true(progress >= 0 && progress <= 1);
+	promise.onProgress(progress => {
+		t.true(progress >= 0 && progress <= 1, `${progress}`);
 	});
 
-	t.is(await p, fixture);
+	t.is(await promise, fixture);
 });
 
 test('PProgress.all()', async t => {
-	const fixtureFn = input => pProgress(async progress => {
+	const fixtureFunction = input => pProgress(async progress => {
 		progress(0.16);
 		await delay(50);
 		progress(0.55);
@@ -89,7 +89,7 @@ test('PProgress.all()', async t => {
 		return input;
 	});
 
-	const fixtureFn2 = input => pProgress(async progress => {
+	const fixtureFunction2 = input => pProgress(async progress => {
 		progress(0.14);
 		await delay(52);
 		progress(0.37);
@@ -101,20 +101,20 @@ test('PProgress.all()', async t => {
 		return input;
 	});
 
-	const p = PProgress.all([
+	const promise = PProgress.all([
 		delay(103),
-		fixtureFn(fixture),
+		fixtureFunction(fixture),
 		delay(55),
-		fixtureFn2(fixture),
+		fixtureFunction2(fixture),
 		delay(14),
 		delay(209)
 	]);
 
-	p.onProgress(progress => {
-		t.true(progress >= 0 && progress <= 1);
+	promise.onProgress(progress => {
+		t.true(progress >= 0 && progress <= 1, `${progress}`);
 	});
 
-	t.deepEqual(await p, [
+	t.deepEqual(await promise, [
 		undefined,
 		fixture,
 		undefined,
@@ -125,7 +125,7 @@ test('PProgress.all()', async t => {
 });
 
 test('PProgress.all() with concurrency = 1', async t => {
-	const fixtureFn = input => pProgress(async progress => {
+	const fixtureFunction = input => pProgress(async progress => {
 		progress(0.16);
 		await delay(50);
 		progress(0.55);
@@ -133,7 +133,7 @@ test('PProgress.all() with concurrency = 1', async t => {
 		return input;
 	});
 
-	const fixtureFn2 = input => pProgress(async progress => {
+	const fixtureFunction2 = input => pProgress(async progress => {
 		progress(0.41);
 		await delay(50);
 		progress(0.93);
@@ -142,25 +142,25 @@ test('PProgress.all() with concurrency = 1', async t => {
 	});
 
 	// Should throw when first argument is array of promises instead of promise-returning functions
-	t.throws(() => PProgress.all([fixtureFn(fixture), fixtureFn2(fixture)], {
+	t.throws(() => PProgress.all([fixtureFunction(fixture), fixtureFunction2(fixture)], {
 		concurrency: 1
 	}), {
 		instanceOf: TypeError
 	});
 
 	const end = timeSpan();
-	const p = PProgress.all([
-		() => fixtureFn(fixture),
-		() => fixtureFn2(fixture)
+	const promise = PProgress.all([
+		() => fixtureFunction(fixture),
+		() => fixtureFunction2(fixture)
 	], {
 		concurrency: 1
 	});
 
-	p.onProgress(progress => {
-		t.true(progress >= 0 && progress <= 1);
+	promise.onProgress(progress => {
+		t.true(progress >= 0 && progress <= 1, `${progress}`);
 	});
 
-	t.deepEqual(await p, [
+	t.deepEqual(await promise, [
 		fixture,
 		fixture
 	]);
@@ -172,7 +172,7 @@ test('PProgress.all() with concurrency = 1', async t => {
 });
 
 test('PProgress.allSettled()', async t => {
-	const fixtureFn = input => pProgress(async progress => {
+	const fixtureFunction = input => pProgress(async progress => {
 		progress(0.16);
 		await delay(50);
 		progress(0.55);
@@ -180,7 +180,7 @@ test('PProgress.allSettled()', async t => {
 		return input;
 	});
 
-	const fixtureFn2 = input => pProgress(async progress => {
+	const fixtureFunction2 = input => pProgress(async progress => {
 		progress(0.14);
 		await delay(52);
 		progress(0.37);
@@ -192,20 +192,20 @@ test('PProgress.allSettled()', async t => {
 		throw input;
 	});
 
-	const p = PProgress.allSettled([
+	const promise = PProgress.allSettled([
 		delay(103),
-		fixtureFn(fixture),
+		fixtureFunction(fixture),
 		delay(55),
-		fixtureFn2(errorFixture),
+		fixtureFunction2(errorFixture),
 		delay(14),
 		delay(209)
 	]);
 
-	p.onProgress(progress => {
-		t.true(progress >= 0 && progress <= 1);
+	promise.onProgress(progress => {
+		t.true(progress >= 0 && progress <= 1, `${progress}`);
 	});
 
-	t.deepEqual(await p, [
+	t.deepEqual(await promise, [
 		{
 			status: 'fulfilled',
 			value: undefined
@@ -234,7 +234,7 @@ test('PProgress.allSettled()', async t => {
 });
 
 test('PProgress.allSettled() with concurrency = 1', async t => {
-	const fixtureFn = input => pProgress(async progress => {
+	const fixtureFunction = input => pProgress(async progress => {
 		progress(0.16);
 		await delay(50);
 		progress(0.55);
@@ -242,7 +242,7 @@ test('PProgress.allSettled() with concurrency = 1', async t => {
 		return input;
 	});
 
-	const fixtureFn2 = input => pProgress(async progress => {
+	const fixtureFunction2 = input => pProgress(async progress => {
 		progress(0.41);
 		await delay(50);
 		progress(0.93);
@@ -251,25 +251,25 @@ test('PProgress.allSettled() with concurrency = 1', async t => {
 	});
 
 	// Should throw when first argument is array of promises instead of promise-returning functions
-	t.throws(() => PProgress.allSettled([fixtureFn(fixture)], {
+	t.throws(() => PProgress.allSettled([fixtureFunction(fixture)], {
 		concurrency: 1
 	}), {
 		instanceOf: TypeError
 	});
 
 	const end = timeSpan();
-	const p = PProgress.allSettled([
-		() => fixtureFn(fixture),
-		() => fixtureFn2(errorFixture)
+	const promise = PProgress.allSettled([
+		() => fixtureFunction(fixture),
+		() => fixtureFunction2(errorFixture)
 	], {
 		concurrency: 1
 	});
 
-	p.onProgress(progress => {
-		t.true(progress >= 0 && progress <= 1);
+	promise.onProgress(progress => {
+		t.true(progress >= 0 && progress <= 1, `${progress}`);
 	});
 
-	t.deepEqual(await p, [
+	t.deepEqual(await promise, [
 		{
 			status: 'fulfilled',
 			value: fixture
