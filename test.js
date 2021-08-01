@@ -142,7 +142,7 @@ test('PProgress.all() with concurrency = 1', async t => {
 	});
 
 	// Should throw when first argument is array of promises instead of promise-returning functions
-	await t.throwsAsync(() => PProgress.all([fixtureFunction(fixture), fixtureFunction2(fixture)], {
+	await t.throwsAsync(PProgress.all([fixtureFunction(fixture), fixtureFunction2(fixture)], {
 		concurrency: 1
 	}), {
 		instanceOf: TypeError
@@ -251,7 +251,7 @@ test('PProgress.allSettled() with concurrency = 1', async t => {
 	});
 
 	// Should throw when first argument is array of promises instead of promise-returning functions
-	await t.throwsAsync(() => PProgress.allSettled([fixtureFunction(fixture)], {
+	await t.throwsAsync(PProgress.allSettled([fixtureFunction(fixture)], {
 		concurrency: 1
 	}), {
 		instanceOf: TypeError
