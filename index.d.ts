@@ -6,7 +6,7 @@ export type PromiseSettledResult<ResolveValueType> = {
 	value: ResolveValueType;
 } | {
 	status: 'rejected';
-	reason: any;
+	reason: unknown;
 };
 
 export interface Options {
