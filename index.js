@@ -12,14 +12,14 @@ const sum = iterable => {
 
 export class PProgress extends Promise {
 	static all(promises, options) {
-		if (
-			options && typeof options.concurrency === 'number' &&
-			!(promises.every(promise => typeof promise === 'function'))
-		) {
-			throw new TypeError('When `options.concurrency` is set, the first argument must be an Array of Promise-returning functions');
-		}
+		return pProgress(async progress => {
+			if (
+				options && typeof options.concurrency === 'number' &&
+				!(promises.every(promise => typeof promise === 'function'))
+			) {
+				throw new TypeError('When `options.concurrency` is set, the first argument must be an Array of Promise-returning functions');
+			}
 
-		return pProgress(progress => {
 			const progressMap = new Map();
 
 			const reportProgress = () => {
@@ -49,14 +49,14 @@ export class PProgress extends Promise {
 	}
 
 	static allSettled(promises, {concurrency} = {}) {
-		if (
-			typeof concurrency === 'number' &&
-			!(promises.every(promise => typeof promise === 'function'))
-		) {
-			throw new TypeError('When `options.concurrency` is set, the first argument must be an Array of Promise-returning functions');
-		}
+		return pProgress(async progress => {
+			if (
+				typeof concurrency === 'number' &&
+				!(promises.every(promise => typeof promise === 'function'))
+			) {
+				throw new TypeError('When `options.concurrency` is set, the first argument must be an Array of Promise-returning functions');
+			}
 
-		return pProgress(progress => {
 			const progressMap = new Map();
 
 			const reportProgress = () => {
