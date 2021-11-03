@@ -16,7 +16,7 @@ const allProgressPromise = PProgress.all([
 	delay(103),
 	progressPromise(),
 	delay(55),
-	delay(209)
+	delay(209),
 ]);
 
 allProgressPromise.onProgress(console.log);

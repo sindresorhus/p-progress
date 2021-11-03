@@ -14,8 +14,8 @@ export class PProgress extends Promise {
 	static all(promises, options) {
 		return pProgress(async progress => {
 			if (
-				options && typeof options.concurrency === 'number' &&
-				!(promises.every(promise => typeof promise === 'function'))
+				options && typeof options.concurrency === 'number'
+				&& !(promises.every(promise => typeof promise === 'function'))
 			) {
 				throw new TypeError('When `options.concurrency` is set, the first argument must be an Array of Promise-returning functions');
 			}
@@ -51,8 +51,8 @@ export class PProgress extends Promise {
 	static allSettled(promises, {concurrency} = {}) {
 		return pProgress(async progress => {
 			if (
-				typeof concurrency === 'number' &&
-				!(promises.every(promise => typeof promise === 'function'))
+				typeof concurrency === 'number'
+				&& !(promises.every(promise => typeof promise === 'function'))
 			) {
 				throw new TypeError('When `options.concurrency` is set, the first argument must be an Array of Promise-returning functions');
 			}
@@ -78,12 +78,12 @@ export class PProgress extends Promise {
 				try {
 					return {
 						status: 'fulfilled',
-						value: await promise
+						value: await promise,
 					};
 				} catch (error) {
 					return {
 						status: 'rejected',
-						reason: error
+						reason: error,
 					};
 				} finally {
 					progressMap.set(promise, 1);
@@ -92,7 +92,7 @@ export class PProgress extends Promise {
 			};
 
 			return pTimes(promises.length, mapper, {
-				concurrency
+				concurrency,
 			});
 		});
 	}
@@ -133,7 +133,7 @@ export class PProgress extends Promise {
 					if (progress !== 1) {
 						setProgress(progress);
 					}
-				}
+				},
 			);
 		});
 
@@ -156,7 +156,6 @@ export class PProgress extends Promise {
 	}
 
 	then(onFulfilled, onRejected) {
-		// eslint-disable-next-line promise/prefer-await-to-then
 		const child = super.then(onFulfilled, onRejected);
 		this._listeners.add(progress => {
 			child._setProgress(progress);

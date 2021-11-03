@@ -1,3 +1,4 @@
+// TODO: Use the built-in type when TS 4.5 is out.
 type Awaited<ValueType> = ValueType extends undefined ? ValueType : ValueType extends PromiseLike<infer ResolveValueType> ? ResolveValueType : ValueType;
 
 // https://github.com/microsoft/TypeScript/blob/582e404a1041ce95d22939b73f0b4d95be77c6ec/lib/lib.es2020.promise.d.ts#L21-L31
@@ -11,7 +12,7 @@ export type PromiseSettledResult<ResolveValueType> = {
 
 export interface Options {
 	/**
-	Number of concurrently pending promises. Minimum: `1`.
+	The number of concurrently pending promises. Minimum: `1`.
 
 	To run the promises in series, set it to `1`.
 
@@ -27,65 +28,11 @@ export type PromiseFactory<ValueType> = () => PromiseLike<ValueType>;
 export type ProgressNotifier = (progress: number) => void;
 
 // @ts-expect-error `Promise.all` currently uses an incompatible combinatorics-based type definition (https://github.com/microsoft/TypeScript/issues/39788)
-export class PProgress<ValueType> extends Promise<ValueType> {
-	/**
-	The current progress percentage of the promise as a number between 0 and 1.
-	*/
-	readonly progress: number;
-
-	/**
-	Same as the [`Promise` constructor](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise).
-
-	@param executor - Same as the `Promise` constructor but with an appended `progress` parameter in `executor`.
-
-	@example
-	```
-	import {PProgress} from 'p-progress';
-
-	const progressPromise = new PProgress((resolve, reject, progress) => {
-		const job = new Job();
-
-		job.on('data', data => {
-			progress(data.length / job.totalSize);
-		});
-
-		job.on('finish', resolve);
-		job.on('error', reject);
-	});
-
-	progressPromise.onProgress(progress => {
-		console.log(`${progress * 100}%`);
-		//=> 9%
-		//=> 23%
-		//=> 59%
-		//=> 75%
-		//=> 100%
-	});
-
-	await progressPromise;
-	```
-	*/
-	constructor(
-		/**
-		@param progress - Call this with progress updates. It expects a number between 0 and 1.
-
-		Multiple calls with the same number will result in only one `onProgress()` event.
-
-		Calling with a number lower than previously will be ignored.
-
-		Progress percentage `1` is reported for you when the promise resolves. If you set it yourself, it will simply be ignored.
-		*/
-		executor: (
-			resolve: (value?: ValueType | PromiseLike<ValueType>) => void,
-			reject: (reason?: unknown) => void,
-			progress: ProgressNotifier
-		) => void
-	);
-
+export class PProgress<ValueType> extends Promise<ValueType> { // eslint-disable-line @typescript-eslint/naming-convention
 	/**
 	Convenience method to run multiple promises and get a total progress of all of them. It counts normal promises with progress `0` when pending and progress `1` when resolved. For `PProgress` type promises, it listens to their `onProgress()` method for more fine grained progress reporting. You can mix and match normal promises and `PProgress` promises.
 
-	@param promises - Array of promises or promise-returning functions, similar to [p-all](https://github.com/sindresorhus/p-all).
+	@param promises - Promises or promise-returning functions, similar to [p-all](https://github.com/sindresorhus/p-all).
 
 	@example
 	```
@@ -145,7 +92,7 @@ export class PProgress<ValueType> extends Promise<ValueType> {
 	/**
 	Like [`Promise.allSettled`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled) but also exposes the total progress of all of the promises like `PProgress.all`.
 
-	@param promises - Array of promises or promise-returning functions, similar to [p-all](https://github.com/sindresorhus/p-all).
+	@param promises - Promises or promise-returning functions, similar to [p-all](https://github.com/sindresorhus/p-all).
 
 	@example
 	```
@@ -210,6 +157,60 @@ export class PProgress<ValueType> extends Promise<ValueType> {
 		promises: Iterable<PromiseFactory<ReturnValue> | PromiseLike<ReturnValue>>,
 		options?: Options
 	): PProgress<Iterable<PromiseSettledResult<ReturnValue>>>;
+
+	/**
+	The current progress percentage of the promise as a number between 0 and 1.
+	*/
+	readonly progress: number;
+
+	/**
+	Same as the [`Promise` constructor](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise).
+
+	@param executor - Same as the `Promise` constructor but with an appended `progress` parameter in `executor`.
+
+	@example
+	```
+	import {PProgress} from 'p-progress';
+
+	const progressPromise = new PProgress((resolve, reject, progress) => {
+		const job = new Job();
+
+		job.on('data', data => {
+			progress(data.length / job.totalSize);
+		});
+
+		job.on('finish', resolve);
+		job.on('error', reject);
+	});
+
+	progressPromise.onProgress(progress => {
+		console.log(`${progress * 100}%`);
+		//=> 9%
+		//=> 23%
+		//=> 59%
+		//=> 75%
+		//=> 100%
+	});
+
+	await progressPromise;
+	```
+	*/
+	constructor(
+		/**
+		@param progress - Call this with progress updates. It expects a number between 0 and 1.
+
+		Multiple calls with the same number will result in only one `onProgress()` event.
+
+		Calling with a number lower than previously will be ignored.
+
+		Progress percentage `1` is reported for you when the promise resolves. If you set it yourself, it will simply be ignored.
+		*/
+		executor: (
+			resolve: (value?: ValueType | PromiseLike<ValueType>) => void,
+			reject: (reason?: unknown) => void,
+			progress: ProgressNotifier
+		) => void
+	);
 
 	/**
 	Accepts a function that gets `instance.progress` as an argument and is called for every progress event.

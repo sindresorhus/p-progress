@@ -37,7 +37,6 @@ test('new PProgress()', async t => {
 		t.true(progress >= 0 && progress <= 1, `${progress}`);
 	});
 
-	// eslint-disable-next-line promise/prefer-await-to-then
 	promise.then(result => [result, result]).then(results => {
 		t.true(Array.isArray(results));
 		for (const result of results) {
@@ -49,7 +48,6 @@ test('new PProgress()', async t => {
 			t.true(progress >= 0 && progress <= 1, `${progress}`);
 		});
 
-	// eslint-disable-next-line promise/prefer-await-to-then
 	promise.catch(() => {}).onProgress(progress => {
 		t.is(progress, promise.progress);
 		t.true(progress >= 0 && progress <= 1, `${progress}`);
@@ -107,7 +105,7 @@ test('PProgress.all()', async t => {
 		delay(55),
 		fixtureFunction2(fixture),
 		delay(14),
-		delay(209)
+		delay(209),
 	]);
 
 	promise.onProgress(progress => {
@@ -120,7 +118,7 @@ test('PProgress.all()', async t => {
 		undefined,
 		fixture,
 		undefined,
-		undefined
+		undefined,
 	]);
 });
 
@@ -143,17 +141,17 @@ test('PProgress.all() with concurrency = 1', async t => {
 
 	// Should throw when first argument is array of promises instead of promise-returning functions
 	await t.throwsAsync(PProgress.all([fixtureFunction(fixture), fixtureFunction2(fixture)], {
-		concurrency: 1
+		concurrency: 1,
 	}), {
-		instanceOf: TypeError
+		instanceOf: TypeError,
 	});
 
 	const end = timeSpan();
 	const promise = PProgress.all([
 		() => fixtureFunction(fixture),
-		() => fixtureFunction2(fixture)
+		() => fixtureFunction2(fixture),
 	], {
-		concurrency: 1
+		concurrency: 1,
 	});
 
 	promise.onProgress(progress => {
@@ -162,12 +160,12 @@ test('PProgress.all() with concurrency = 1', async t => {
 
 	t.deepEqual(await promise, [
 		fixture,
-		fixture
+		fixture,
 	]);
 
 	t.true(inRange(end(), {
 		start: 200, // 4 delays of 50ms each
-		end: 300 // Reasonable padding
+		end: 300, // Reasonable padding
 	}));
 });
 
@@ -198,7 +196,7 @@ test('PProgress.allSettled()', async t => {
 		delay(55),
 		fixtureFunction2(errorFixture),
 		delay(14),
-		delay(209)
+		delay(209),
 	]);
 
 	promise.onProgress(progress => {
@@ -208,28 +206,28 @@ test('PProgress.allSettled()', async t => {
 	t.deepEqual(await promise, [
 		{
 			status: 'fulfilled',
-			value: undefined
+			value: undefined,
 		},
 		{
 			status: 'fulfilled',
-			value: fixture
+			value: fixture,
 		},
 		{
 			status: 'fulfilled',
-			value: undefined
+			value: undefined,
 		},
 		{
 			status: 'rejected',
-			reason: errorFixture
+			reason: errorFixture,
 		},
 		{
 			status: 'fulfilled',
-			value: undefined
+			value: undefined,
 		},
 		{
 			status: 'fulfilled',
-			value: undefined
-		}
+			value: undefined,
+		},
 	]);
 });
 
@@ -252,17 +250,17 @@ test('PProgress.allSettled() with concurrency = 1', async t => {
 
 	// Should throw when first argument is array of promises instead of promise-returning functions
 	await t.throwsAsync(PProgress.allSettled([fixtureFunction(fixture)], {
-		concurrency: 1
+		concurrency: 1,
 	}), {
-		instanceOf: TypeError
+		instanceOf: TypeError,
 	});
 
 	const end = timeSpan();
 	const promise = PProgress.allSettled([
 		() => fixtureFunction(fixture),
-		() => fixtureFunction2(errorFixture)
+		() => fixtureFunction2(errorFixture),
 	], {
-		concurrency: 1
+		concurrency: 1,
 	});
 
 	promise.onProgress(progress => {
@@ -272,16 +270,16 @@ test('PProgress.allSettled() with concurrency = 1', async t => {
 	t.deepEqual(await promise, [
 		{
 			status: 'fulfilled',
-			value: fixture
+			value: fixture,
 		},
 		{
 			status: 'rejected',
-			reason: errorFixture
-		}
+			reason: errorFixture,
+		},
 	]);
 
 	t.true(inRange(end(), {
 		start: 200, // 4 delays of 50ms each
-		end: 300 // Reasonable padding
+		end: 300, // Reasonable padding
 	}));
 });

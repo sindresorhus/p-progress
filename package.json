@@ -34,28 +34,15 @@
 		"bluebird"
 	],
 	"dependencies": {
-		"p-times": "^3.0.0"
+		"p-times": "^4.0.0"
 	},
 	"devDependencies": {
-		"@babel/eslint-parser": "^7.14.4",
-		"@babel/plugin-syntax-top-level-await": "^7.12.13",
 		"ava": "^3.15.0",
 		"delay": "^5.0.0",
 		"in-range": "^3.0.0",
 		"time-span": "^5.0.0",
-		"tsd": "^0.16.0",
-		"typescript": "^4.3.5",
-		"xo": "^0.40.1"
-	},
-	"xo": {
-		"parser": "@babel/eslint-parser",
-		"parserOptions": {
-			"requireConfigFile": false,
-			"babelOptions": {
-				"plugins": [
-					"@babel/plugin-syntax-top-level-await"
-				]
-			}
-		}
+		"tsd": "^0.18.0",
+		"typescript": "^4.4.4",
+		"xo": "^0.46.4"
 	}
 }

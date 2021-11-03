@@ -6,8 +6,8 @@ Useful for reporting progress to the user during long-running async operations.
 
 ## Install
 
-```
-$ npm install p-progress
+```sh
+npm install p-progress
 ```
 
 ## Usage
@@ -158,7 +158,7 @@ console.log(await allProgressPromise);
 
 Type: `Promise[]`
 
-Array of promises or promise-returning functions, similar to [p-all](https://github.com/sindresorhus/p-all).
+An array of promises or promise-returning functions, similar to [p-all](https://github.com/sindresorhus/p-all).
 
 #### options
 
@@ -170,7 +170,7 @@ Type: `number`\
 Default: `Infinity`\
 Minimum: `1`
 
-Number of concurrently pending promises.
+The number of concurrently pending promises.
 
 To run the promises in series, set it to `1`.
 
