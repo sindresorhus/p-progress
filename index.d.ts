@@ -1,6 +1,3 @@
-// TODO: Use the built-in type when TS 4.5 is out.
-type Awaited<ValueType> = ValueType extends undefined ? ValueType : ValueType extends PromiseLike<infer ResolveValueType> ? ResolveValueType : ValueType;
-
 // https://github.com/microsoft/TypeScript/blob/582e404a1041ce95d22939b73f0b4d95be77c6ec/lib/lib.es2020.promise.d.ts#L21-L31
 export type PromiseSettledResult<ResolveValueType> = {
 	status: 'fulfilled';
@@ -10,7 +7,7 @@ export type PromiseSettledResult<ResolveValueType> = {
 	reason: unknown;
 };
 
-export interface Options {
+export type Options = {
 	/**
 	The number of concurrently pending promises. Minimum: `1`.
 
@@ -21,13 +18,12 @@ export interface Options {
 	@default Infinity
 	*/
 	readonly concurrency: number;
-}
+};
 
 export type PromiseFactory<ValueType> = () => PromiseLike<ValueType>;
 
 export type ProgressNotifier = (progress: number) => void;
 
-// @ts-expect-error `Promise.all` currently uses an incompatible combinatorics-based type definition (https://github.com/microsoft/TypeScript/issues/39788)
 export class PProgress<ValueType> extends Promise<ValueType> { // eslint-disable-line @typescript-eslint/naming-convention
 	/**
 	Convenience method to run multiple promises and get a total progress of all of them. It counts normal promises with progress `0` when pending and progress `1` when resolved. For `PProgress` type promises, it listens to their `onProgress()` method for more fine grained progress reporting. You can mix and match normal promises and `PProgress` promises.
@@ -231,10 +227,10 @@ const runJob = async name => pProgress(async progress => {
 	const job = new Job(name);
 
 	job.on('data', data => {
-		progress(data.length / job.totalSize)
+		progress(data.length / job.totalSize);
 	});
 
-	await job.run()
+	await job.run();
 });
 
 const progressPromise = runJob('Gather rainbows');

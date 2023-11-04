@@ -1,5 +1,5 @@
 import {expectType} from 'tsd';
-import pProgress, {PProgress, ProgressNotifier, PromiseSettledResult} from './index.js';
+import pProgress, {PProgress, type ProgressNotifier, type PromiseSettledResult} from './index.js';
 
 const progressPromise = new PProgress(async (resolve, reject, progress) => {
 	expectType<(progress: number) => void>(progress);
@@ -23,23 +23,23 @@ expectType<PProgress<[string]>>(
 	PProgress.all([Promise.resolve('sindresorhus.com')]),
 );
 expectType<PProgress<[string]>>(
-	PProgress.all([async () => Promise.resolve('sindresorhus.com')]),
+	PProgress.all([async () => 'sindresorhus.com']),
 );
 expectType<PProgress<[string]>>(
-	PProgress.all([async () => Promise.resolve('sindresorhus.com')], {concurrency: 1}),
+	PProgress.all([async () => 'sindresorhus.com'], {concurrency: 1}),
 );
 expectType<PProgress<[string, number]>>(
 	PProgress.all([Promise.resolve('sindresorhus.com'), Promise.resolve(1)]),
 );
 expectType<PProgress<[string, number]>>(
 	PProgress.all([
-		async () => Promise.resolve('sindresorhus.com'),
-		async () => Promise.resolve(1),
+		async () => 'sindresorhus.com',
+		async () => 1,
 	]),
 );
 expectType<PProgress<[string, number]>>(
 	PProgress.all(
-		[async () => Promise.resolve('sindresorhus.com'), async () => Promise.resolve(1)],
+		[async () => 'sindresorhus.com', async () => 1],
 		{concurrency: 1},
 	),
 );
@@ -52,17 +52,17 @@ expectType<PProgress<[string, number, boolean]>>(
 );
 expectType<PProgress<[string, number, boolean]>>(
 	PProgress.all([
-		async () => Promise.resolve('sindresorhus.com'),
-		async () => Promise.resolve(1),
-		async () => Promise.resolve(true),
+		async () => 'sindresorhus.com',
+		async () => 1,
+		async () => true,
 	]),
 );
 expectType<PProgress<[string, number, boolean]>>(
 	PProgress.all(
 		[
-			async () => Promise.resolve('sindresorhus.com'),
-			async () => Promise.resolve(1),
-			async () => Promise.resolve(true),
+			async () => 'sindresorhus.com',
+			async () => 1,
+			async () => true,
 		],
 		{concurrency: 1},
 	),
@@ -77,19 +77,19 @@ expectType<PProgress<[string, number, boolean, symbol]>>(
 );
 expectType<PProgress<[string, number, boolean, symbol]>>(
 	PProgress.all([
-		async () => Promise.resolve('sindresorhus.com'),
-		async () => Promise.resolve(1),
-		async () => Promise.resolve(true),
-		async () => Promise.resolve(Symbol('Test')),
+		async () => 'sindresorhus.com',
+		async () => 1,
+		async () => true,
+		async () => Symbol('Test'),
 	]),
 );
 expectType<PProgress<[string, number, boolean, symbol]>>(
 	PProgress.all(
 		[
-			async () => Promise.resolve('sindresorhus.com'),
-			async () => Promise.resolve(1),
-			async () => Promise.resolve(true),
-			async () => Promise.resolve(Symbol('Test')),
+			async () => 'sindresorhus.com',
+			async () => 1,
+			async () => true,
+			async () => Symbol('Test'),
 		],
 		{concurrency: 1},
 	),
@@ -105,21 +105,21 @@ expectType<PProgress<[string, number, boolean, symbol, string[]]>>(
 );
 expectType<PProgress<[string, number, boolean, symbol, string[]]>>(
 	PProgress.all([
-		async () => Promise.resolve('sindresorhus.com'),
-		async () => Promise.resolve(1),
-		async () => Promise.resolve(true),
-		async () => Promise.resolve(Symbol('Test')),
-		async () => Promise.resolve(['foo']),
+		async () => 'sindresorhus.com',
+		async () => 1,
+		async () => true,
+		async () => Symbol('Test'),
+		async () => ['foo'],
 	]),
 );
 expectType<PProgress<[string, number, boolean, symbol, string[]]>>(
 	PProgress.all(
 		[
-			async () => Promise.resolve('sindresorhus.com'),
-			async () => Promise.resolve(1),
-			async () => Promise.resolve(true),
-			async () => Promise.resolve(Symbol('Test')),
-			async () => Promise.resolve(['foo']),
+			async () => 'sindresorhus.com',
+			async () => 1,
+			async () => true,
+			async () => Symbol('Test'),
+			async () => ['foo'],
 		],
 		{concurrency: 1},
 	),
@@ -136,23 +136,23 @@ expectType<PProgress<[string, number, boolean, symbol, string[], string]>>(
 );
 expectType<PProgress<[string, number, boolean, symbol, string[], string]>>(
 	PProgress.all([
-		async () => Promise.resolve('sindresorhus.com'),
-		async () => Promise.resolve(1),
-		async () => Promise.resolve(true),
-		async () => Promise.resolve(Symbol('Test')),
-		async () => Promise.resolve(['foo']),
-		async () => Promise.resolve('sindresorhus.com'),
+		async () => 'sindresorhus.com',
+		async () => 1,
+		async () => true,
+		async () => Symbol('Test'),
+		async () => ['foo'],
+		async () => 'sindresorhus.com',
 	]),
 );
 expectType<PProgress<[string, number, boolean, symbol, string[], string]>>(
 	PProgress.all(
 		[
-			async () => Promise.resolve('sindresorhus.com'),
-			async () => Promise.resolve(1),
-			async () => Promise.resolve(true),
-			async () => Promise.resolve(Symbol('Test')),
-			async () => Promise.resolve(['foo']),
-			async () => Promise.resolve('sindresorhus.com'),
+			async () => 'sindresorhus.com',
+			async () => 1,
+			async () => true,
+			async () => Symbol('Test'),
+			async () => ['foo'],
+			async () => 'sindresorhus.com',
 		],
 		{concurrency: 1},
 	),
@@ -174,13 +174,13 @@ expectType<
 PProgress<[string, number, boolean, symbol, string[], string, number]>
 >(
 	PProgress.all([
-		async () => Promise.resolve('sindresorhus.com'),
-		async () => Promise.resolve(1),
-		async () => Promise.resolve(true),
-		async () => Promise.resolve(Symbol('Test')),
-		async () => Promise.resolve(['foo']),
-		async () => Promise.resolve('sindresorhus.com'),
-		async () => Promise.resolve(1),
+		async () => 'sindresorhus.com',
+		async () => 1,
+		async () => true,
+		async () => Symbol('Test'),
+		async () => ['foo'],
+		async () => 'sindresorhus.com',
+		async () => 1,
 	]),
 );
 expectType<
@@ -188,13 +188,13 @@ PProgress<[string, number, boolean, symbol, string[], string, number]>
 >(
 	PProgress.all(
 		[
-			async () => Promise.resolve('sindresorhus.com'),
-			async () => Promise.resolve(1),
-			async () => Promise.resolve(true),
-			async () => Promise.resolve(Symbol('Test')),
-			async () => Promise.resolve(['foo']),
-			async () => Promise.resolve('sindresorhus.com'),
-			async () => Promise.resolve(1),
+			async () => 'sindresorhus.com',
+			async () => 1,
+			async () => true,
+			async () => Symbol('Test'),
+			async () => ['foo'],
+			async () => 'sindresorhus.com',
+			async () => 1,
 		],
 		{concurrency: 1},
 	),
@@ -221,14 +221,14 @@ PProgress<
 >
 >(
 	PProgress.all([
-		async () => Promise.resolve('sindresorhus.com'),
-		async () => Promise.resolve(1),
-		async () => Promise.resolve(true),
-		async () => Promise.resolve(Symbol('Test')),
-		async () => Promise.resolve(['foo']),
-		async () => Promise.resolve('sindresorhus.com'),
-		async () => Promise.resolve(1),
-		async () => Promise.resolve(true),
+		async () => 'sindresorhus.com',
+		async () => 1,
+		async () => true,
+		async () => Symbol('Test'),
+		async () => ['foo'],
+		async () => 'sindresorhus.com',
+		async () => 1,
+		async () => true,
 	]),
 );
 expectType<
@@ -238,14 +238,14 @@ PProgress<
 >(
 	PProgress.all(
 		[
-			async () => Promise.resolve('sindresorhus.com'),
-			async () => Promise.resolve(1),
-			async () => Promise.resolve(true),
-			async () => Promise.resolve(Symbol('Test')),
-			async () => Promise.resolve(['foo']),
-			async () => Promise.resolve('sindresorhus.com'),
-			async () => Promise.resolve(1),
-			async () => Promise.resolve(true),
+			async () => 'sindresorhus.com',
+			async () => 1,
+			async () => true,
+			async () => Symbol('Test'),
+			async () => ['foo'],
+			async () => 'sindresorhus.com',
+			async () => 1,
+			async () => true,
 		],
 		{concurrency: 1},
 	),
@@ -273,15 +273,15 @@ PProgress<
 >
 >(
 	PProgress.all([
-		async () => Promise.resolve('sindresorhus.com'),
-		async () => Promise.resolve(1),
-		async () => Promise.resolve(true),
-		async () => Promise.resolve(Symbol('Test')),
-		async () => Promise.resolve(['foo']),
-		async () => Promise.resolve('sindresorhus.com'),
-		async () => Promise.resolve(1),
-		async () => Promise.resolve(true),
-		async () => Promise.resolve(Symbol('Test')),
+		async () => 'sindresorhus.com',
+		async () => 1,
+		async () => true,
+		async () => Symbol('Test'),
+		async () => ['foo'],
+		async () => 'sindresorhus.com',
+		async () => 1,
+		async () => true,
+		async () => Symbol('Test'),
 	]),
 );
 expectType<
@@ -291,15 +291,15 @@ PProgress<
 >(
 	PProgress.all(
 		[
-			async () => Promise.resolve('sindresorhus.com'),
-			async () => Promise.resolve(1),
-			async () => Promise.resolve(true),
-			async () => Promise.resolve(Symbol('Test')),
-			async () => Promise.resolve(['foo']),
-			async () => Promise.resolve('sindresorhus.com'),
-			async () => Promise.resolve(1),
-			async () => Promise.resolve(true),
-			async () => Promise.resolve(Symbol('Test')),
+			async () => 'sindresorhus.com',
+			async () => 1,
+			async () => true,
+			async () => Symbol('Test'),
+			async () => ['foo'],
+			async () => 'sindresorhus.com',
+			async () => 1,
+			async () => true,
+			async () => Symbol('Test'),
 		],
 		{concurrency: 1},
 	),
@@ -350,16 +350,16 @@ PProgress<
 >
 >(
 	PProgress.all([
-		async () => Promise.resolve('sindresorhus.com'),
-		async () => Promise.resolve(1),
-		async () => Promise.resolve(true),
-		async () => Promise.resolve(Symbol('Test')),
-		async () => Promise.resolve(['foo']),
-		async () => Promise.resolve('sindresorhus.com'),
-		async () => Promise.resolve(1),
-		async () => Promise.resolve(true),
-		async () => Promise.resolve(Symbol('Test')),
-		async () => Promise.resolve(['foo']),
+		async () => 'sindresorhus.com',
+		async () => 1,
+		async () => true,
+		async () => Symbol('Test'),
+		async () => ['foo'],
+		async () => 'sindresorhus.com',
+		async () => 1,
+		async () => true,
+		async () => Symbol('Test'),
+		async () => ['foo'],
 	]),
 );
 expectType<
@@ -380,16 +380,16 @@ PProgress<
 >(
 	PProgress.all(
 		[
-			async () => Promise.resolve('sindresorhus.com'),
-			async () => Promise.resolve(1),
-			async () => Promise.resolve(true),
-			async () => Promise.resolve(Symbol('Test')),
-			async () => Promise.resolve(['foo']),
-			async () => Promise.resolve('sindresorhus.com'),
-			async () => Promise.resolve(1),
-			async () => Promise.resolve(true),
-			async () => Promise.resolve(Symbol('Test')),
-			async () => Promise.resolve(['foo']),
+			async () => 'sindresorhus.com',
+			async () => 1,
+			async () => true,
+			async () => Symbol('Test'),
+			async () => ['foo'],
+			async () => 'sindresorhus.com',
+			async () => 1,
+			async () => true,
+			async () => Symbol('Test'),
+			async () => ['foo'],
 		],
 		{concurrency: 1},
 	),
@@ -412,33 +412,33 @@ expectType<PProgress<[string, number, boolean, symbol, string[], string, number,
 );
 expectType<PProgress<[string, number, boolean, symbol, string[], string, number, boolean, symbol, string[], string[]]>>(
 	PProgress.all([
-		async () => Promise.resolve('sindresorhus.com'),
-		async () => Promise.resolve(1),
-		async () => Promise.resolve(true),
-		async () => Promise.resolve(Symbol('Test')),
-		async () => Promise.resolve(['foo']),
-		async () => Promise.resolve('sindresorhus.com'),
-		async () => Promise.resolve(1),
-		async () => Promise.resolve(true),
-		async () => Promise.resolve(Symbol('Test')),
-		async () => Promise.resolve(['foo']),
-		async () => Promise.resolve(['foo']),
+		async () => 'sindresorhus.com',
+		async () => 1,
+		async () => true,
+		async () => Symbol('Test'),
+		async () => ['foo'],
+		async () => 'sindresorhus.com',
+		async () => 1,
+		async () => true,
+		async () => Symbol('Test'),
+		async () => ['foo'],
+		async () => ['foo'],
 	]),
 );
 expectType<PProgress<[string, number, boolean, symbol, string[], string, number, boolean, symbol, string[], string[]]>>(
 	PProgress.all(
 		[
-			async () => Promise.resolve('sindresorhus.com'),
-			async () => Promise.resolve(1),
-			async () => Promise.resolve(true),
-			async () => Promise.resolve(Symbol('Test')),
-			async () => Promise.resolve(['foo']),
-			async () => Promise.resolve('sindresorhus.com'),
-			async () => Promise.resolve(1),
-			async () => Promise.resolve(true),
-			async () => Promise.resolve(Symbol('Test')),
-			async () => Promise.resolve(['foo']),
-			async () => Promise.resolve(['foo']),
+			async () => 'sindresorhus.com',
+			async () => 1,
+			async () => true,
+			async () => Symbol('Test'),
+			async () => ['foo'],
+			async () => 'sindresorhus.com',
+			async () => 1,
+			async () => true,
+			async () => Symbol('Test'),
+			async () => ['foo'],
+			async () => ['foo'],
 		],
 		{concurrency: 1},
 	),
@@ -464,34 +464,34 @@ expectType<PProgress<Iterable<string | number | boolean | symbol | string[]>>>(
 expectType<PProgress<Iterable<string | number | boolean | symbol | string[]>>>(
 	PProgress.all<string | number | boolean | symbol | string[]>(
 		new Set([
-			async () => Promise.resolve('sindresorhus.com'),
-			async () => Promise.resolve(1),
-			async () => Promise.resolve(true),
-			async () => Promise.resolve(Symbol('Test')),
-			async () => Promise.resolve(['foo']),
-			async () => Promise.resolve('sindresorhus.com'),
-			async () => Promise.resolve(1),
-			async () => Promise.resolve(true),
-			async () => Promise.resolve(Symbol('Test')),
-			async () => Promise.resolve(['foo']),
-			async () => Promise.resolve(['foo']),
+			async () => 'sindresorhus.com',
+			async () => 1,
+			async () => true,
+			async () => Symbol('Test'),
+			async () => ['foo'],
+			async () => 'sindresorhus.com',
+			async () => 1,
+			async () => true,
+			async () => Symbol('Test'),
+			async () => ['foo'],
+			async () => ['foo'],
 		]),
 	),
 );
 expectType<PProgress<Iterable<string | number | boolean | symbol | string[]>>>(
 	PProgress.all<string | number | boolean | symbol | string[]>(
 		new Set([
-			async () => Promise.resolve('sindresorhus.com'),
-			async () => Promise.resolve(1),
-			async () => Promise.resolve(true),
-			async () => Promise.resolve(Symbol('Test')),
-			async () => Promise.resolve(['foo']),
-			async () => Promise.resolve('sindresorhus.com'),
-			async () => Promise.resolve(1),
-			async () => Promise.resolve(true),
-			async () => Promise.resolve(Symbol('Test')),
-			async () => Promise.resolve(['foo']),
-			async () => Promise.resolve(['foo']),
+			async () => 'sindresorhus.com',
+			async () => 1,
+			async () => true,
+			async () => Symbol('Test'),
+			async () => ['foo'],
+			async () => 'sindresorhus.com',
+			async () => 1,
+			async () => true,
+			async () => Symbol('Test'),
+			async () => ['foo'],
+			async () => ['foo'],
 		]),
 		{concurrency: 1},
 	),

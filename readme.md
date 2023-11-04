@@ -19,10 +19,10 @@ const runJob = async name => pProgress(async progress => {
 	const job = new Job(name);
 
 	job.on('data', data => {
-		progress(data.length / job.totalSize)
+		progress(data.length / job.totalSize);
 	});
 
-	await job.run()
+	await job.run();
 });
 
 const progressPromise = runJob('Gather rainbows');

@@ -155,7 +155,7 @@ export class PProgress extends Promise {
 		return this;
 	}
 
-	then(onFulfilled, onRejected) {
+	then(onFulfilled, onRejected) { // eslint-disable-line unicorn/no-thenable
 		const child = super.then(onFulfilled, onRejected);
 		this._listeners.add(progress => {
 			child._setProgress(progress);
